@@ -398,7 +398,7 @@ diversity(site1, "inv")
 diversity(site1, "simp")
 ```
 
-####CANAN = perhaps introduce Hill numbers here or after Fisher's alpha. 
+####CANAN = perhaps introduce Hill numbers here or after Fisher's alpha.
 
 ### C. Fisher's $\boldsymbol\alpha$
 R.A. Fisher (1943) derived one of the first and most successful models for the RAC, i.e., the log-series distribution.
