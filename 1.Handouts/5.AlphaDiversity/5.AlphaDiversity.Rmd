@@ -19,7 +19,7 @@ From there, we will discuss ways to integrate richness and evenness, which will 
 ```{r, results = 'hide'}
 rm(list=ls()) 
 getwd() 
-setwd("~/GitHub/QB-2021/1.HandOuts/5.AlphaDiversity")
+setwd("~/GitHub/QB-2023/1.HandOuts/5.AlphaDiversity")
 ```
 
 ### B. Install Packages
@@ -238,7 +238,7 @@ RAC <- function(x = ""){
 Now, let's examine the RAC for `site1` of the BCI data set.
 We will do this by creating a sequence of ranks and plotting the RAC with natural-log-transformed abundances.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 plot.new()
 site1 <- BCI[1, ]
 
@@ -398,8 +398,6 @@ diversity(site1, "inv")
 diversity(site1, "simp")
 ```
 
-####CANAN = perhaps introduce Hill numbers here or after Fisher's alpha.
-
 ### C. Fisher's $\boldsymbol\alpha$
 R.A. Fisher (1943) derived one of the first and most successful models for the RAC, i.e., the log-series distribution.
 This model has only a single fitted parameter, i.e., $\alpha$.
@@ -422,7 +420,45 @@ They would converge if our community was much greater in total abundance and ric
 However, discussion of Fisher's $\alpha$ introduces a new concept, that is, of *estimating* diversity instead of just calculating a diversity metric. 
 The difference being that an estimate of diversity implicitly or explicitly accounts for sampling error, that is, the fact that when sampling most ecological communities, we are not observing every single individual.
 
-##6) MOVING BEYOND UNIVARIATE METRICS OF $\alpha$-DIVERSIY 
+## 6) HILL NUMBERS
+
+Richness measurements, even the best asymptotic estimators such as Chao are sensitive to sampling effort, relative abundance, and standardization methods. Traditional diversity indices explicitly include relative abundances, such as the Shannon entropy and Simpson index. Although they are more robust to the uncertainty, these indices have different units and do not scale intuitively with species gain or loss. Hill numbers are developed by Hill (1973) and reintroduced to ecology by Jost (2006). This metric is only one equation and so a way to estimate generalized mean species rarity. We can define the generalized equation of hill diversity as:
+
+$$\displaystyle H_q=\frac{1}{1-q}log\sum_{n=1}^{S}p_i^q$$
+Where the q exponent is the order in which the index is dependent of rare species. Hill numbers will be then $N_q=exp(Hq)$. Here are the commonly used exponents and and their relationship with traditional indices:
+
+| Hill Diversity | Equivalent index | Derivation | Simplification | Meaning |
+|--|--|---|---|---|
+| Hill- Richness | Richness | $H_0=exp(S)$ | $N_0=S$ | $q=0$ is the arithmetic mean of rarity |
+| Hill- Shannon | Exponential  Shannon  entropy | $H_1=\sum_{i=1}^{S}{p_i}{logp_1}$ | $N_1=exp(H_1)$ | $q=1$ is the geometric mean rarity |
+| Hill- Simpson | Inverse Simpson index | $H_2=-log\sum_{i=1}^{S}{p_i}^{2}$ | $N_2=1/\sum_{i=1}^{S}{p_i}^{2}$ | $q=2$ is the harmonic mean rarity |      |         |
+
+Coverage is the fairest available theoretical method that describes how well a sample captures the true diversity of the whole community, considering that diverse communities need more sampling effort than others. Standardization by coverage might be better than traditional rarefaction, yet both are lacking confidence intervals and are sensitive to sample completeness. Extrapolation extends the pattern of species detection to greater sample size, effort, or coverage than the estimations based on the available data. Although still not fully established, the newest methods combine diversity measures and sample coverage to estimate uncertainty around alpha diversity. Here we will use iNEXT package to graphically explore Hill diversity incorporating sample coverage. It will allow us to extrapolate diversity measures beyond the samples taken. We will be also estimate confidence intervals of these predictions by random sampling. Let's do this comparison using the `site 1` and `site 2` of the BCI site-by-species matrix.
+
+Let's prepare the data and load the package. 
+```{r}
+#install.packages("iNEXT")
+library(iNEXT)
+sites <- BCI[1:2,]
+sites_clean <- sites[, colSums(sites != 0) > 0] #remove 0 abundances
+sites_clean_t <- t(sites_clean) #transform the matrix
+```
+
+Now we will estimate and graphically explore Hill numbers. We will extrapolate these estimates beyond the sampling effort. We will also bootstrap the estimates with random sampling to determine the confidence intervals around diversity estimations. 
+
+```{r}
+out_hill <- iNEXT(t(sites_clean), q=c(0, 1, 2), datatype="abundance", endpoint=1000, nboot = 100)
+ggiNEXT(out_hill, type=1, color.var="Order.q", facet.var = 'Assemblage') 
+```
+
+We can also graphically explore how accurate our diversity estimations based on the sample coverage. 
+
+```{r}
+ggiNEXT(out_hill, type=3, color.var="Order.q", facet.var = 'Assemblage')
+```
+
+
+## 7) MOVING BEYOND UNIVARIATE METRICS OF $\alpha$-DIVERSIY 
 
 The diversity metrics that we just learned about attempt to integrate richness and evenness into a single, univariate metric.
 Although useful, information is invariably lost in this data reducing process. 
