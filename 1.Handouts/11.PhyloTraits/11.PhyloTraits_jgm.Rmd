@@ -60,7 +60,7 @@ This `for` loop loads each package and installs the package when `require()` ret
 ```{r, results = 'hide', message = FALSE, warning = FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60)} 
 package.list <- c('ape', 'seqinr', 'phylobase', 'adephylo', 'geiger', 
       'picante', 'stats', 'RColorBrewer', 'caper', 'phylolm', 'pmc', 
-      'ggplot2', 'tidyr', 'dplyr', 'phangorn', 'pander','phytools','vegan','cluster','dendextend','phylogram') 
+      'ggplot2', 'tidyr', 'dplyr', 'phangorn', 'pander','phytools','vegan','cluster','dendextend','phylogram','bios2mds') 
 for (package in package.list) {
   if (!require(package, character.only=TRUE, quietly=TRUE)) {
     install.packages(package)
@@ -122,6 +122,10 @@ R is a great data analysis language and has become a more all-inclusive environm
 ```{r}
 # Align sequences using default Muscle parameters {msa}
 read.aln = msaMuscle(seqs)
+
+#export alignment using bios2mds package
+save.aln = msaConvert(read.aln,type="bios2mds::align")
+export.fasta(save.aln,"./data/p.isolates.afa")
 ```
 
 
@@ -537,8 +541,8 @@ Let's look at what happens when we transform our tree with lambda values of 1, 0
 
 ```{r}
 # Visualize Trees With Different Levels of  Phylogenetic Signal {geiger}
-nj.lambda.5 <- rescale(nj.rooted, "lambda", 0.5)
-nj.lambda.0 <- rescale(nj.rooted, "lambda", 0)
+nj.lambda.5 <- geiger::rescale(nj.rooted, "lambda", 0.5)
+nj.lambda.0 <- geiger::rescale(nj.rooted, "lambda", 0)
 
 layout(matrix(c(1,2,3), 1, 3), width = c(1, 1, 1))
 par(mar=c(1,0.5,2,0.5)+0.1) 
@@ -662,7 +666,7 @@ phylo.d(p.traits, binvar = cAMP,permut = 10000)
 
 ### D. Determine correspondence between evolutionary history and ecology
 
-So far we have quantified the distribution of traits along the phylogeny. We can also draw a dendrogram based on our traits to visualize similarities in traits among species independent of phylogeny. This will allow us to be able to visualize the degree that, for example, phylogeny, resource use, and environment influence the species we are studying. For the case of our phosphorus use data, we can see the degree that phylogenetic relationships and lake origin have on our resource use data. To create a dendrogram of resource use, we will make a hierarchical agglomerative cluster of the binary trait data we just made in the previous exercise. The added benefit of this analysis is that we get an additional layer of information from clustering resource use. A hierarchical cluster will allow us to visualize the pairwise similarity among species for resource use, which we can use to infer **niche overlap**. Niche overlap indicates the potential for exploitative competition among taxa at each site because two taxa may compete for the same resource. Here we will map our trait data onto the phylogeny to compare the hierarchical structures in each dataset. We can compare our two dendrograms using Robinson-Fould metric and a Mantel correlation test.
+So far we have quantified the distribution of traits along the phylogeny. We can also draw a dendrogram based on our traits to visualize similarities in traits among species independent of phylogeny. This will allow us to be able to visualize the degree that, for example, phylogeny, resource use, and environment influence the species we are studying. For the case of our phosphorus use data, we can see the degree that phylogenetic relationships and lake origin have on our resource use data. To create a dendrogram of resource use, we will make a hierarchical agglomerative cluster of the binary trait data we just made in the previous exercise. The added benefit of this analysis is that we get an additional layer of information from clustering resource use. A hierarchical cluster will allow us to visualize the pairwise similarity among species for resource use, which we can use to infer **niche overlap**. Niche overlap indicates the potential for exploitative competition among taxa at each site because two taxa may compete for the same resource. Here we will map our trait data onto the phylogeny to compare the hierarchical structures in each dataset. We can compare our two dendrograms using a **tanglegram** (a plot that shows the alignment between two dendrograms), Robinson-Fould metric, and a Mantel correlation test.
 
 ```{r}
 # Generate jaccard index matrix
