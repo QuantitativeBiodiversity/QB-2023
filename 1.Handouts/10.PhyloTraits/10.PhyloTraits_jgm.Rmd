@@ -1,5 +1,5 @@
 ---
-title: "11\\. Phylogenetic Diversity - Traits"
+title: "10\\. Phylogenetic Diversity - Traits"
 author: 'Z620: Quantitative Biodiversity, Indiana University'
 header-includes: \usepackage{array}
 output:
@@ -13,16 +13,16 @@ editor_options:
 
 ## OVERVIEW
 
-Up to this point, Quantitative Biodiversity has focused on aspects of taxonomic diversity. 
-However, measures of taxonomic diversity overlook the evolutionary relatedness (i.e., phylogenetics) of individuals in a community.
-In this Handout, we introduce concepts and tools that will allow you to integrate phylogenetic information to test and better understand how evolutionary history influences patterns of biodiversity. 
+Up to this point, Quantitative Biodiversity has focused on aspects of taxonomic diversity, a form of classification that ignores traits and the evolutionary relatedness of individuals in a community.  
+
+In this Handout, we introduce concepts and tools that will allow you to integrate phylogenetic information to test and better understand how evolutionary history influences patterns of biodiversity while considering traits of those organisms. 
 
 After completing this exercise you will be able to:
 
 1.  create phylogenetic trees to view evolutionary relationships from sequence data
 2.  map the traits of taxa onto phylogenetic trees 
 3.  test for phylogenetic signal within trait distributions and trait-based patterns of biodiversity
-4.  control for the phylogenetic relatedness of taxa to identify correlations among traits
+4.  control for the relatedness of taxa to identify evolutionary unbiased correlations among traits
 
 ## BACKGROUND
 
@@ -35,9 +35,9 @@ For example, the ability for a plant and its associated microorganisms to fix at
 It is often assumed that more closely related (i.e., more recently diverged) taxa have a greater degree of trait similarity than more distantly related taxa that diverged further back in time.
 Therefore, it is possible to detect trait-environment and trait-function relationships simply because an assemblage is comprised of closely related taxa. 
 We can not only test for this so-called **phylogenetic signal**, but also correct for it. 
-In order to explore the relationship between the evolutionary relatedness of taxa and the distribution of functional traits among those taxa, we must introduce another fundamental data structure: the **phylogeny**.
+In order to explore the relationship between the evolutionary relatedness of taxa and the distribution of functional traits among those taxa, we must introduce another primary data structure: the **phylogeny**.
 A phylogeny is an evolutionary tree constructed by comparing the divergence in gene or protein sequences among a group of organisms.
-Constructing a phylogeny relies on the assumption that more distantly related organisms have accumulated more differences in their sequences since the time they last shared a common ancestor, while the sequences of more closely related taxa would be more similar. 
+Constructing a phylogeny relies on the assumption that more distantly related organisms have accumulated more differences in their sequences (i.e., substitutions) since the time they last shared a common ancestor, while the sequences of more closely related taxa would be more similar. 
 In the following sections, we will provide an introduction to constructing phylogenetic trees.
 From this, you will gain evolutionary insight into patterns and processes of biodiversity (e.g., diversification, adaptation, etc.).
 
@@ -48,7 +48,7 @@ From this, you will gain evolutionary insight into patterns and processes of bio
 ```{r, results = 'hide'}
 rm(list = ls())
 getwd()
-setwd("~/GitHub/QB-2021/1.HandOuts/11.PhyloTraits")
+setwd("~/GitHub/QB-2023/1.HandOuts/10.PhyloTraits")
 ```
 
 ### B. Load Packages 
@@ -86,9 +86,9 @@ The bacteria were isolated from two lakes that greatly differ in their biogeoche
 One lake, Little long (LL), has extremely low concentrations of phosphorus (i.e., oligotrophic) while the other lake, Wintergreen (WG), is adjacent to a bird sanctuary and receives high inputs of phosphorus (i.e., eutrophic).
 We hypothesize that these two environments contain taxa with different traits that influence their ability to use different types of phosphorus.
 To test this hypothesis, we extracted DNA from all of bacterial strains and amplified the 16S rRNA gene, which is a commonly used "marker" for delineating microbial taxa and examining phylogenies of bacteria.
-In addition, we measured the maximum growth rate $\mu_{max}$ of each strain on 18 different phosphorus resources.
+In addition, we measured the maximum growth rate ($\mu_{max}$) of each strain on 18 different phosphorus resources.
 With this information, we can measure the **niche breadth** of each strain and consider this a functional trait. 
-In the following sections, we take a phylogenetic approach to mapping phosphorus resource use onto a phylogenetic tree while testing for ecological trade-offs related to resource use.
+In the following sections, we take a phylogenetic approach to mapping phosphorus resource use onto a phylogenetic tree while testing for ecological trade-offs related to resource use. Specifically, we  will determine whether organisms exhibit generalist or specialist strategies when it comes to growing on different phosphorus types. 
 
 ## 3) SEQUENCE ALIGNMENT 
 
@@ -97,20 +97,20 @@ The sequences can represent nucleotides (DNA or RNA) or proteins (amino acids).
 Computer algorithms are used to arrange sequences relative to one another based on conserved (i.e., non-variable) regions.
 The non-conserved or "variable" regions are then used for making phylogenetic inference, including tree construction. 
 There are two different ways to align sequences. 
-Global alignment relies on algorithms that attempt to align the entire span of sequences. 
-Local alignment is typically a preferable approach and uses algorithms that initiate alignment by identifying regions in a sequence that have a high degree of similarity.
+**Global alignment** relies on algorithms that attempt to align the entire span of sequences. 
+**Local alignment** is typically a preferable approach and uses algorithms that initiate alignment by identifying regions in a sequence that have a high degree of similarity.
 In the example below, we will be using a local alignment approach. 
 
 ### A.  Examining a FASTA-File
 
 We will read in a FASTA-formatted file into the `muscle` alignment program, a common aligner used for protein and 16S rRNA gene sequences.
 FASTA is a very common text-based format that is used across platforms and disciplines. 
-The files contain sequences (e.g., CTAAG) and names that are associated with samples. 
+The files contain DNA sequences (e.g., CTAAG) and names that are associated with samples. 
 Let's take a second to look at the *p.isolates.fasta* file. We can use the `Biostrings` package to load our sequences into the R environment and do a quick check to make sure they look correct.
 
 ```{r}
 # Import sequences {Biostrings}
-seqs = readDNAStringSet("./data/p.isolates.fasta",format='fasta')
+seqs = readDNAStringSet("./data/p.isolates.fasta", format = 'fasta')
 seqs # View sequences
 ```
 
@@ -124,7 +124,7 @@ R is a great data analysis language and has become a more all-inclusive environm
 read.aln = msaMuscle(seqs)
 
 #export alignment using bios2mds package
-save.aln = msaConvert(read.aln,type="bios2mds::align")
+save.aln = msaConvert(read.aln,type = "bios2mds::align")
 export.fasta(save.aln,"./data/p.isolates.afa")
 ```
 
@@ -146,14 +146,14 @@ p.DNAbin <- as.DNAbin(read.aln)
 # Identify Base Pair Region of 16S rRNA Gene to Visuzlize
 window <- p.DNAbin[, 100:500] 
 
-# Command to Visusalize Sequence Alignment {ape}
+# Command to Visualize Sequence Alignment {ape}
 image.DNAbin(window, cex.lab = 0.50) 
 
 # Optional Code Adds Grid to Help Visualize Rows of Sequences 
 #grid(ncol(window), nrow(window), col = "lightgrey") 
 ```
 
-An inspection of the figure suggests that our alignment is good because many vertical bars are aligned with the same color, indicating they share the same nucleotide at that site. If this visualization showed a jumbled mess, we may want to realign our sequences using different parameters/programs, etc. Sometimes we may also find that some areas poorly align and need to be removed from our final alignment to make sure we only retain phylogenetically informative sites. Tools like GBlocks or TrimAI can be very useful. GBlocks can be implemented with the `ips` package.
+An inspection of the figure suggests that our alignment is good because many vertical bars are aligned with the same color, indicating they share the same nucleotide at that site. If this visualization showed a jumbled mess, we may want to realign our sequences using different parameters or a different programs. You might also want to consider the quality of the data. Sometimes we may also find that some areas poorly align and need to be removed from our final alignment to make sure we only retain phylogenetically informative sites. Tools like GBlocks or TrimAI can be very useful. GBlocks can be implemented with the `ips` package.
 
 
 ## 4) MAKING A PHYLOGENETIC TREE
@@ -161,7 +161,7 @@ An inspection of the figure suggests that our alignment is good because many ver
 Once you have aligned your sequences, the next step is to construct a phylogenetic tree.
 Not only is a phylogenetic tree effective for visualizing the evolutionary relationship among taxa, but as you will see later, the information that goes into a phylogenetic tree is needed for downstream analysis. 
 There are many algorithms, theories, and tools that are used for making phylogenetic trees.
-It is not possible to cover all of these topics in Quantitative Biodiversity, but we try to highlight some of the major concepts in the following sections, including the table below:
+It is not possible to cover all of these topics in Quantitative Biodiversity, but we try to highlight some of the major concepts in this handout, including the following table:
 
 \begin{center}
 \hyphenpenalty 10000
@@ -170,19 +170,19 @@ It is not possible to cover all of these topics in Quantitative Biodiversity, bu
   \textbf{Tree Method} & \textbf{Properties} \\
   \hline \hline \\ [-1.5ex]
   \textbf{UPGMA} & 
-  Hierarchical clustering technique. This technique progressively groups the most similar pairs of sequences. Sometimes used as a guide tree for more sophisticated phylogenetic analyses, but prone to distorting tree topology and assumes constant rates of evolution. UPGMA can be implemented in R with the $\emph{upgma()}$ function in the $\emph{panghorn}$ package.\\
+  Unweighted Pair Group Method with Arithmetic Mean is a hierarchical clustering technique. It progressively groups the most similar pairs of sequences. Sometimes used as a guide tree for more sophisticated phylogenetic analyses, but prone to distorting tree topology and assumes constant rates of evolution. UPGMA can be implemented in R with the $\emph{upgma()}$ function in the `panghorn` package.\\
   \\ [-1.5ex]
   \textbf{Neighbor Joining} & 
-  Starts with an unresolved tree in a "star network". Algorithm then identifies the two most similar taxa and creates a node. This process is iteratively applied to the remaining sequences. Can serve as a starting point for assessing evolutionary models with more sophisticated methods like maximum likelihood. Neighbor joining can be implemented in the R package $\emph{ape}$ using the $\emph{bionj()}$ function. \\
+  Starts with an unresolved tree in a "star network". Algorithm then identifies the two most similar taxa and creates a node. This process is iteratively applied to the remaining sequences. Can serve as a starting point for assessing evolutionary models with more sophisticated methods like maximum likelihood. Neighbor joining can be implemented in the R package `ape` using the $\emph{bionj()}$ function. \\
   \\ [-1.5ex]  
   \textbf{Maximum Parsimony} & 
-  A character-based, non-parametric approach that involves identifying one of many possible trees based on the minimum number of evolutionary "steps" (i.e. the most parsimonious tree). No underlying evolutionary model. Maximum parsimony can be executed using the $\emph{parsimony()}$ function in the package $\emph{panghorn}$. The function $\emph{optim.parsimony}$ performs tree rearrangements using nearest-neighbor interchanges (NNI) to optimize parsimony scores.\\
+  A character-based, non-parametric approach that involves identifying one of many possible trees based on the minimum number of evolutionary "steps" (i.e., the most parsimonious tree). No underlying evolutionary model. Maximum parsimony can be executed using the $\emph{parsimony()}$ function in the package `panghorn` The function $\emph{optim.parsimony()}$ performs tree rearrangements using nearest-neighbor interchanges (NNI) to optimize parsimony scores.\\
   \\ [-1.5ex]   
   \textbf{Maximum Likelihood} & 
-  Parametric approach to identifying the relative probability associated with data fitting a given model of character evolution. One of the most commonly used approaches for building trees from sequence data. Statistically sound and flexible for accommodating realistic models of sequence evolution. Maximum likelihood can be implemented in R using the $\emph{pml()}$ function in the $\emph{panghorn}$ package. Parameters can be optimized using the $\emph{optim.pml()}$ function and evolutionary models can be compared with the $\emph{model.tests()}$ function\\
+  Parametric approach to identifying the relative probability associated with data fitting a given model of character evolution. One of the most commonly used approaches for building trees from sequence data. Statistically sound and flexible for accommodating realistic models of sequence evolution. Maximum likelihood can be implemented in R using the $\emph{pml()}$ function in the `panghorn` package. Parameters can be optimized using the $\emph{optim.pml()}$ function and evolutionary models can be compared with the $\emph{model.tests()}$ function\\
   \\ [-1.5ex]  
   \textbf{Bayesian} & 
-  Uses likelihood function and prior probabilities to create a posterior probability of a tree fitting a given model of evolution. Computationally intensive; often uses Markov chains Monte Carlo (MCMC). Unlike other methods, parameters are not constant; rather, they come from probabilistic distributions. Along with maximum likelihood, considered one of the more preferable ways of generating trees. R has some packages (e.g., $\emph{ips}$) the wrap popular Bayesian software such as MrBayes\\
+  Uses likelihood function and prior probabilities to create a posterior probability of a tree fitting a given model of evolution. Computationally intensive; often uses Markov chain Monte Carlo (MCMC). Unlike other methods, parameters are not constant; rather, they come from probabilistic distributions. Along with maximum likelihood, considered one of the more preferable ways of generating trees. R has some packages (e.g., `ips`) the wrap popular Bayesian software such as MrBayes.\\
   \\ [-1.5ex]  
   \hline
 \end{tabular}
@@ -194,7 +194,7 @@ As a method, nearest neighbor joining takes a distance matrix that specifies the
 The algorithm starts with a tree where all taxa are equally related, finds and joins the taxa with the lowest distance into a new node, re-calculates the distance between all the remaining taxa and the new node, and repeats this process until all the taxa are accounted for. 
 
 Neighbor joining is commonly used for making a "guide tree" that can incorporate more sophisticated models of evolution. 
-The first step in making a neighbor joining tree is to create a distance matrix. 
+The first step in making a neighbor joining tree is to create a **distance matrix**. 
 We will do this with the `dist.dna` function in the `ape` package. 
 In the R chunk below, the "model = raw" argument means that `dist.dna` will estimate distances based on the proportion of sites that differ between pairs of sequences.
 The "pairwise.deletion = FALSE" argument means that an entire site (i.e., column) is deleted if there is a missing observation (i.e., a gap) for one or more of the sequences (i.e., rows). 
@@ -204,15 +204,15 @@ The "pairwise.deletion = FALSE" argument means that an entire site (i.e., column
 seq.dist.raw <- dist.dna(p.DNAbin, model = "raw", pairwise.deletion = FALSE)
 ```
 
-After calculating the distances between our sequences, we are now ready to make a neighbor joining tree using the `bionj` function in `ape`. 
-In the process, we will use *Methanosarcina* as a reference to determine the evolutionary relationship among the members of our tree (i.e. an **outgroup**). 
-By using an outgroup we have a point of comparison for the rest of our taxa (i.e. the **ingroup**), also known as **rooting** the tree. 
+After calculating the distances between our sequences, we are now ready to make a neighbor joining tree using the `bionj()` function in `ape`. 
+In the process, we will use *Methanosarcina* as a reference to determine the evolutionary relationship among the members of our tree (i.e., an **outgroup**). 
+By using an outgroup we have a point of comparison for the rest of our taxa (i.e., the **ingroup**), also known as **rooting** the tree. 
 Ideally, the outgroup should be a taxon that you know all of your taxa diverged from farther back in the past than when they diverged from each other.
 
-To store phylogenies we'll be using the `phylo` class, the basic phylogenetic data structure used in R. 
-A `phylo` object stores four objects: 1) the tip labels (i.e. taxa) of the tree, 2) the number of nodes (i.e. the inferred most recent common ancestor) on the tree, 3), the names of the edges (i.e. the evolutionary distance between nodes) on the tree, and 4) and the length of the edges
+To store phylogenies we will be using the `phylo` class, the basic phylogenetic data structure used in R. 
+A `phylo` object stores four objects: 1) the tip labels (i.e., taxa) of the tree, 2) the number of nodes (i.e., the inferred most recent common ancestor) on the tree, 3) the names of the edges (i.e., the evolutionary distance between nodes) on the tree, and 4) and the length of the edges.
 
-At this point, we can plot our tree.
+At this point, we can plot our tree:
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 # Neighbor Joining Algorithm to Construct Tree, a 'phylo' Object {ape}
@@ -226,8 +226,9 @@ nj.rooted <- root(nj.tree, outgroup, resolve.root = TRUE)
 
 # Plot the Rooted Tree{ape}
 par(mar = c(1,1,2,1) + 0.1)
-plot.phylo(nj.rooted, main = "Neighbor Joining Tree", "phylogram", use.edge.length = FALSE,
-           direction = "right", cex = 0.6, label.offset = 1)
+plot.phylo(nj.rooted, main = "Neighbor Joining Tree", "phylogram", 
+           use.edge.length = FALSE, direction = "right", cex = 0.6, 
+           label.offset = 1)
 add.scale.bar(cex = 0.7)
 ```
 
@@ -269,7 +270,7 @@ We will then correct the raw distances of your matrix.
 \end{center}
   
 Fortunately, the `dist.dna` function that we used above for generating the neighbor joining tree can easily create distance matrices for a large number of DNA substitution models. 
-Let's create a distance matrix among our bacterial isolates based on the Felsenstein (F84) substitution model using the `dist.dna` function in `ape`. 
+Let us create a distance matrix among our bacterial isolates based on the Felsenstein (F84) substitution model using the `dist.dna()` function in `ape`. 
 
 ```{r}
 # Create distance matrix with "F84" model {ape}
@@ -304,27 +305,29 @@ raw.outgroup <- match("Methanosarcina", raw.tree$tip.label)
 F84.outgroup <- match("Methanosarcina", F84.tree$tip.label) 
 
 # Root the Trees {ape}
-raw.rooted <- root(raw.tree, raw.outgroup, resolve.root=TRUE) 
-F84.rooted <- root(F84.tree, F84.outgroup, resolve.root=TRUE)
+raw.rooted <- root(raw.tree, raw.outgroup, resolve.root = TRUE) 
+F84.rooted <- root(F84.tree, F84.outgroup, resolve.root = TRUE)
 
 # Make Cophylogenetic Plot {ape}
 layout(matrix(c(1,2), 1, 2), width = c(1, 1))
 par(mar = c(1, 1, 2, 0))
-plot.phylo(raw.rooted, type = "phylogram", direction = "right", show.tip.label=TRUE,
-           use.edge.length = FALSE, adj = 0.5, cex = 0.6, label.offset = 2, main = "Raw")
+plot.phylo(raw.rooted, type = "phylogram", direction = "right", 
+      show.tip.label = TRUE, use.edge.length = FALSE, adj = 0.5, 
+      cex = 0.6, label.offset = 2, main = "Raw")
 
 par(mar = c(1, 0, 2, 1))
-plot.phylo(F84.rooted, type = "phylogram", direction = "left", show.tip.label=TRUE,
-           use.edge.length = FALSE, adj = 0.5, cex = 0.6, label.offset = 2, main = "F84")
+plot.phylo(F84.rooted, type = "phylogram", direction = "left", 
+      show.tip.label = TRUE, use.edge.length = FALSE, adj = 0.5, 
+      cex = 0.6, label.offset = 2, main = "F84")
 ```
 
 ### C) QUANTIFYING PHYLOGENETIC SIMILARITY
 
 Sometimes we will want to quantify the difference between two phylogenies rather than simply plotting them side-by-side. 
 The package `ape` includes two ways to calculate this difference: 1) the branch length score (BLS) (Kuhner and Felsenstein, 1994) and the symmetric difference (Robinson and Foulds 1981). 
-The symmetric difference is simply the number of partitions (i.e. the number of ways to group the taxa in our tree) that are in one tree and not the other. 
+The symmetric difference is simply the number of partitions (i.e., the number of ways to group the taxa in our tree) that are in one tree and not the other. 
 This is a very simple calculation, but it is extremely sensitive to small differences between the trees. 
-The branch length score between trees $T$ and ${T}'$ can be described as $BLS(T,{T}') = \sum_{i=1}^{N}(t_{i}- {t_{i}}')^{2}$, where $t_{i}$ is the branch length if the $i$th partition is in both trees and is zero if it isn't. 
+The branch length score between trees $T$ and ${T}'$ can be described as $BLS(T,{T}') = \sum_{i=1}^{N}(t_{i}- {t_{i}}')^{2}$, where $t_{i}$ is the branch length if the $i$th partition is in both trees and is zero if it is not. 
 This function should look familiar, since it is just the squared Euclidean distance between two trees and it ranges from values of 0 to 1. 
 The history, appropriateness, and limitations of these methods are nicely discussed in chapter 30 of Felsenstein (2004).
 
@@ -341,23 +344,23 @@ dist.topo(raw.rooted, F84.rooted, method = "score")
 ### D) MAXIMUM LIKELIHOOD TREE
 Often a nearest neighbor joined tree does not accurately reconstruct the real phylogeny. 
 While neighbor joining is very fast and has the convenient property of returning the correct tree for a correct distance matrix, we are rarely in the position where we know the correct distance matrix. 
-In addition, it 1) it only uses a distance matrix, which doesn't take into account specific nucleotide states, 2) it only gives one tree, meaning that it is not a statistical method, and 3) it can be sensitive to the underlying substitution model. 
+Neighbor joining has some other shortcomings. First, it only uses a distance matrix, which doesn't take into account specific nucleotide states. Second, it only gives one tree, meaning that it is not a statistical method. Last, it can be sensitive to the underlying substitution model.  
+
 Instead, a maximum likelihood (ML) tree is often a superior choice, as it is built on the robust statistical procedure of ML (i.e., the process of finding the parameter value that maximizes the likelihood of the data). 
 In addition, ML has the advantage of being the estimation method that is least affected by sampling error, is fairly robust to the assumptions of a particularly model, allows you to compare different trees, and takes into account nucleotide states (as opposed to just distance). 
-However, ML estimation is a computationally intensive process that can require a lot of time. 
 
-This is because ML estimation needs to find the tree that gives the data the highest probability, a difficult task that requires the use of optimized algorithms. 
-Because ML estimation can take a long time, we will not ask you to generate a maximum likelihood tree for your assignment. 
+A downside of ML estimation is that it is a computationally intensive process. This is because ML estimation needs to find the tree that gives the data the highest probability, a difficult task that requires the use of optimized algorithms. 
+Because this can take a while, we will not ask you to generate a maximum likelihood tree for your exercises. 
 However, below we have supplied code using functions from the package `phangorn` to generate a ML tree. 
 
 ```{r, eval = FALSE}
 # Requires alignment to be read in with as phyDat object
-p.DNAbin.phyDat <- read.phyDat("./data/p.isolates.afa", format="fasta", type="DNA")
-fit <- pml(nj.rooted, data=p.DNAbin.phyDat)
+p.DNAbin.phyDat <- read.phyDat("./data/p.isolates.afa", format = "fasta", type = "DNA")
+fit <- pml(nj.rooted, data = p.DNAbin.phyDat) ###### Won't run for Jay
 # Fit tree using a JC69 substitution model
 fitJC <- optim.pml(fit, TRUE)
 # Fit tree using a GTR model with gamma distributed rates.
-fitGTR <- optim.pml(fitGTR, model="GTR", optInv=TRUE, optGamma=TRUE,
+fitGTR <- optim.pml(fitGTR, model = "GTR", optInv = TRUE, optGamma = TRUE,
 #  rearrangement = "NNI", control = pml.control(trace = 0))
 # You can perform model selection with either an ANOVA test or by AIC value
 anova(fitJC, fitGTR)
@@ -374,8 +377,8 @@ bs = bootstrap.pml(fitJC, bs=100, optNni=TRUE,
 Because building a phylogenetic tree is very much a statistical exercise we often want to know how confident we are in the placement of each branch in our phylogeny. 
 For example, say that we make a tree today and tomorrow we run the same code, but get a tree with a node in a different place. 
 How do we know which tree is correct? 
-Since we don't know the real tree we'll use the next best thing. 
-We'll re-sample our own data to determine how reliable the tree is. 
+Since we don't know the real tree, we wil use the next best thing. 
+We will re-sample our own data to determine how reliable the tree is. 
 This process is known as **bootstrapping**. 
 To perform bootstrapping, we will select a subset of columns from our alignment randomly with replacement. 
 Next we will use that sample to construct a new tree and compare its topology to the original tree. 
@@ -387,24 +390,23 @@ Again, because this procedure is computationally intensive you will plot bootstr
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 ml.bootstrap <- read.tree("./data/ml_tree/RAxML_bipartitions.T1")
 par(mar = c(1,1,2,1) + 0.1)
-plot.phylo(ml.bootstrap, type = "phylogram", direction = "right", show.tip.label=TRUE,
-           use.edge.length = FALSE, cex = 0.6, label.offset = 1, 
+plot.phylo(ml.bootstrap, type = "phylogram", direction = "right", 
+      show.tip.label = TRUE, use.edge.length = FALSE, cex = 0.6, label.offset = 1, 
            main = "Maximum Likelihood with Support Values")
 add.scale.bar(cex = 0.7)
 nodelabels(ml.bootstrap$node.label, font = 2, bg = "white", frame = "r", cex = 0.5)
-
 ```
 
 ### F) A NOTE ON MAKING YOUR OWN TREES.
 
 R is useful for a lot of things, but it is not optimized for phylogenetic reconstruction and therefore can be extremely slow. 
-If you need to make a phylogeny with more than a dozen or so taxa, then you may need to use packages that don't easily run in an R environment. 
+If you need to make a phylogeny with more than a dozen or so taxa, then you may need to use packages that do not easily run in an R environment. 
 Two of the packages that you will want to check out is the (1) Randomized Axelerated Maximum Likelihood (RAxML) package (http://sco.h-its.org/exelixis/web/software/raxml/index.html) and (2) IQ-Tree package (http://www.iqtree.org/) for generating maximum likelihood trees with bootstrap support. IQ-Tree is particular has the added benefit of performing your model testing as part of your reconstruction pipeline, tends to be more effiecient, and has really useful tutorials.
 If you're dealing with communities with a large number of taxa (e.g., 16S rRNA amplicon data from microbial communities), programs like RAxML may be too slow. Here you can use the program FastTree to generate approximately-maximum-likelihood phylogenetic trees, sacrificing exactness for speed (http://www.microbesonline.org/fasttree/). 
 
 If you are interested in learning more about how to get started, Young and Gillung (2019) is a nice primer for phylogenetics and phylogenomics (https://tinyurl.com/3us9b9uu).
 
-To help you with your future tree-building efforts we have included a short script under the folder `Week6-PhyloTraits/bash/` that will allow you to generate a ML tree on the IU computer cluster Carbonate using the program RAxML. If you are an IU student, postdoc, or faculty member you can register for an account on Carbonate See the IU Carbonate webpage for more information (https://kb.iu.edu/d/aolp).
+To help you with your future tree-building efforts we have included a short script under the folder `Week10-PhyloTraits/bash/` that will allow you to generate a ML tree on the IU computer cluster Carbonate using the program RAxML. If you are an IU student, postdoc, or faculty member you can register for an account on Carbonate See the IU Carbonate webpage for more information (https://kb.iu.edu/d/aolp).
 
 ## 5) INTEGRATING TRAITS AND PHYLOGENY
 
@@ -412,13 +414,13 @@ In the context of biodiversity, many researchers are interested in being able to
 This can be important for addressing questions related to diversification, trait evolution, and ecological interactions.
 In this section, we will import functional trait data that was collected on the 39 freshwater isolates for which we have 16S rRNA sequences.
 Specifically, we measured the growth rates of each strain on 18 different forms of phosphorus (e.g., phosphate, DNA, ATP, etc.). 
-With this information we will visualize the functional traits (i.e., growth on different phosphorus) in a phylogenetic context by mapping them onto the neighbor joining tree constructed under the F84 DNA substitution model (see the table on substitution models) that we created. 
+With this information we will visualize the functional traits (i.e., growth on different forms of phosphorus) in a phylogenetic context by mapping them onto the neighbor joining tree constructed under the F84 DNA substitution model (see the table on substitution models) that we created. 
 
 ### A. Loading Trait Database
 ```{r}
 # Import Growth Rate Data
-p.growth <- read.table("./data/p.isolates.raw.growth.txt", sep = "\t", header = TRUE, 
-                       row.names = 1)
+p.growth <- read.table("./data/p.isolates.raw.growth.txt", sep = "\t", 
+            header = TRUE, row.names = 1)
 
 # Standardize Growth Rates Across Strains
 p.growth.std <- p.growth / (apply(p.growth, 1, sum))
@@ -453,14 +455,14 @@ levins <- function(p_xi = ""){
   }
 ```
 
-Let's apply our `nb()` function to the isolate growth rate data on the different phosphorus resources.
+Let us apply our `nb()` function to the isolate growth rate data on the different phosphorus resources.
 
 ```{r}
 # Calculate Niche Breadth for Each Isolate
 nb <- as.matrix(levins(p.growth.std))
 
 # Add Row Names to Niche Breadth Matrix
-nb <- setNames(as.vector(nb),as.matrix(row.names(p.growth)))
+nb <- setNames(as.vector(nb), as.matrix(row.names(p.growth)))
 ```  
 
 ### C. Visualizing Traits on Trees
@@ -470,7 +472,7 @@ This is similar to the hypothesis-generating visualizations we did in other less
 Before we start, there are a few things that need to be done. 
 First, we need to be sure that we are dealing with the correct version of the tree, so we will recreate the tree.
 Second, we need to make sure that this tree is rooted.
-Last, we need to remove the root, because this isn't part of our traits analysis.
+Last, we need to remove the root, because this is not part of our trait analysis.
 
 ```{r}
 # Generate Neighbor Joining Tree Using F84 DNA Substitution Model {ape}
@@ -486,7 +488,6 @@ nj.rooted <- root(nj.tree, outgroup, resolve.root = TRUE)
 nj.rooted <- drop.tip(nj.rooted, "Methanosarcina")
 
 # Plot to look at our tree
-
 plot(nj.rooted)
 ```
 
@@ -503,7 +504,7 @@ nj.plot = nj.rooted
 nj.plot$edge.length <- nj.plot$edge.length + 10^-1
 
 # Map Phosphorus Traits {adephylo}
-par(mar=c(1,1,1,1) + 0.1)
+par(mar = c(1, 1, 1, 1) + 0.1)
 x <- phylo4d(nj.plot, p.growth.std)
 table.phylo4d(x, treetype = "phylo", symbol = "colors", show.node = TRUE, 
               cex.label = 0.5, scale = FALSE, use.edge.length = FALSE, 
@@ -512,15 +513,14 @@ table.phylo4d(x, treetype = "phylo", symbol = "colors", show.node = TRUE,
               ratio.tree = 0.5, cex.legend = 1.5, center = FALSE)   
 
 # Niche Breadth
-par(mar=c(1,5,1,5) + 0.1)
+par(mar = c(1, 5, 1, 5) + 0.1)
 x.nb <- phylo4d(nj.plot, nb)
 table.phylo4d(x.nb, treetype = "phylo", symbol = "colors", show.node = TRUE, 
               cex.label = 0.5, scale = FALSE, use.edge.length = FALSE, 
               edge.color = "black", edge.width = 2, box = FALSE, 
-              col=mypalette(25), pch = 15, cex.symbol = 1.25, var.label=("       NB"),
+              col = mypalette(25), pch = 15, cex.symbol = 1.25, var.label = ("NB"),
               ratio.tree = 0.90, cex.legend = 1.5, center = FALSE)
 ```
-
 
 
 ## 6) HYPOTHESIS TESTING
@@ -551,7 +551,7 @@ plot(nj.lambda.5, main = "lamba = 0.5", cex = 0.7, adj = 0.5)
 plot(nj.lambda.0, main = "lamba = 0",  cex = 0.7, adj = 0.5)
 ```
 
-Now, let's generate quantitative output that will allow us to assess how much phylogenetic signal is in our data set.
+Now, let us generate quantitative output that will allow us to assess how much phylogenetic signal is in our data set.
 For this test, we will compare the phylogenetic signal of niche breadth using trees with lambda values of 1 (untransformed) and 0 (transformed).
 
 ```{r, results = 'hide', message = FALSE, warning = FALSE}
@@ -560,13 +560,13 @@ fitContinuous(nj.rooted, nb, model = "lambda")
 fitContinuous(nj.lambda.0, nb, model = "lambda")
 ```
 
-From here we're able to get AIC scores. Differences in AIC scores provide maximum likelihood inference regarding the quality of model fit to a given data set. Models with lower AIC values are better. However, if the difference in AIC values between two models ($\Delta$ AIC) is not greater than at least 2, then then the models are considered equivalent. 
+From here we are able to get AIC scores. Differences in AIC scores provide maximum likelihood inference regarding the quality of model fit to a given data set. Models with lower AIC values are better. However, if the difference in AIC values between two models ($\Delta$ AIC) is not greater than at least 2, then then the models are considered equivalent. 
 
 Next, we can compare the AIC results between the two model fits to a likelihood ratio test measuring whether lambda is significantly different from 0.
 
 ```{r}
 # Compare Pagel's lambda score to 0 with likelihood ratio test (no phylogenetic signal)
-phylosig(nj.rooted,nb,method="lambda",test=TRUE)
+phylosig(nj.rooted, nb, method = "lambda", test = TRUE)
 ```
 
 
@@ -578,10 +578,10 @@ A K-value of 1 means that a trait is distributed on the tree according to null e
 A K-value > 1 means that traits are **clustered** with closely related species being *more similar* than expected by chance. 
 A K-value of < 1 means that traits are **overdispersed** with closely related species *less similar* than expected by chance.  
 
-Let's test for phylogenetic signal using Blomberg's K for the standardized growth of our bacterial isolates on *each phosphorus source* based on our neighbor joining tree.
+Let us test for phylogenetic signal using Blomberg's K for the standardized growth of our bacterial isolates on *each phosphorus source* based on our neighbor joining tree.
 
 *Note:* In this particular analysis, we are generating 18 test statistics with associated p-values (one for each phosphorus resource).
-This means that we are increasing our probability of rejecting the null hypothesis (ie. "no phylogenetic signal") when it is in fact true.
+This means that we are increasing our probability of rejecting the null hypothesis (i.e., "no phylogenetic signal") when it is in fact true.
 This is called **false discovery rate** (FDR).
 We are going to correct for FDR using the Benjamini-Hochberg method ("PIC.P.BH"). 
 
@@ -610,9 +610,9 @@ p.phylosignal[6, ] <- round(p.adjust(p.phylosignal[4, ], method = "BH"), 3)
 print(p.phylosignal)
 ```
 
-And from the output of `p.phylosignal` we can see what traits have statistically significant phylogenetic signal with a q value threshold < 0.05 for the BH adjusted p values.
+And from the output of `p.phylosignal` we can see what traits have statistically significant phylogenetic signal with a q-value threshold < 0.05 for the BH adjusted *P* values.
 
-In addition, let's test for phylogenetic signal using Blomberg's K on *niche breadth*:
+In addition, let us test for phylogenetic signal using Blomberg's K on *niche breadth*:
 
 ```{r}
 # Calcualate Phylogenetic Signal for Niche Breadth
@@ -637,13 +637,13 @@ First, there are a few things we need to do:
 2) add a column to our data set for our isolate names, and
 3) combine our tree and trait data using the `comparative.data()` command in `caper`.
 
-The output of phylo.d() will return the estimated value of *D*. 
+The output of `phylo.d()` will return the estimated value of *D*. 
 Estimates of *D* can be negative (clustered) or positive (overdispersed).
 When *D* is close 0, traits are randomly clumped. 
-When *D* is close to 1, traits are dispersed in way that is consistent with Brownian motion. 
+When *D* is close to 1, traits are dispersed in a way that is consistent with Brownian motion. 
 
 The `phylo.d()` function uses a permutation test to calculate the probability of *D* being different from 1 (no phylogenetic structure; random) or 0 (Brownian phylogenetic structure).
-Let's use this function to calculate dispersion (*D*) on a few of our phosphorus traits. If we look at the statistical differences from 0 and 1, make sure to adjust the p value threshold to correct for multiple tests. In this case, we can use Bonferroni correction (0.05/2 = 0.025).
+Let's use this function to calculate dispersion (*D*) on a few of our phosphorus traits. If we look at the statistical differences from 0 and 1, make sure to adjust the *P* value threshold to correct for multiple tests. In this case, we can use Bonferroni correction (0.05/2 = 0.025).
 
 ```{r, results = 'hide', message = FALSE, warning = FALSE}
 # Turn Continuous Data into Categorical Data
@@ -666,11 +666,11 @@ phylo.d(p.traits, binvar = cAMP,permut = 10000)
 
 ### D. Determine correspondence between evolutionary history and ecology
 
-So far we have quantified the distribution of traits along the phylogeny. We can also draw a dendrogram based on our traits to visualize similarities in traits among species independent of phylogeny. This will allow us to be able to visualize the degree that, for example, phylogeny, resource use, and environment influence the species we are studying. For the case of our phosphorus use data, we can see the degree that phylogenetic relationships and lake origin have on our resource use data. To create a dendrogram of resource use, we will make a hierarchical agglomerative cluster of the binary trait data we just made in the previous exercise. The added benefit of this analysis is that we get an additional layer of information from clustering resource use. A hierarchical cluster will allow us to visualize the pairwise similarity among species for resource use, which we can use to infer **niche overlap**. Niche overlap indicates the potential for exploitative competition among taxa at each site because two taxa may compete for the same resource. Here we will map our trait data onto the phylogeny to compare the hierarchical structures in each dataset. We can compare our two dendrograms using a **tanglegram** (a plot that shows the alignment between two dendrograms), Robinson-Fould metric, and a Mantel correlation test.
+So far we have quantified the distribution of traits along the phylogeny. We can also draw a dendrogram based on our traits to visualize similarities in traits among species independent of phylogeny. This will allow us to visualize the degree that, for example, phylogeny, resource use, and environment influence the species we are studying. For the case of our phosphorus use data, we can see the degree that phylogenetic relationships and lake origin have on our resource use data. To create a dendrogram of resource use, we will make a hierarchical agglomerative cluster of the binary trait data. The  benefit is that we get an additional layer of information from clustering resource use. A hierarchical cluster will allow us to visualize the pairwise similarity among species for resource use, which we can use to infer **niche overlap**. Niche overlap indicates the potential for exploitative competition among taxa at each site because two taxa may compete for the same resource. Here we will map our trait data onto the phylogeny to compare the hierarchical structures in each dataset. We can compare our two dendrograms using a **tanglegram** (a plot that shows the alignment between two dendrograms), Robinson-Fould metric, and a Mantel correlation test.
 
 ```{r}
-# Generate jaccard index matrix
-no = vegdist(p.growth.pa[,1:18],method='jaccard',binary = TRUE) # calculated dissimilarity
+# Generate Jaccard's index (dissimilarity)
+no = vegdist(p.growth.pa[,1:18], method = 'jaccard', binary = TRUE) 
 
 # Test the clustering method that best fits the data
 # Define linkage methods
@@ -685,45 +685,59 @@ ac <- function(x) {
 # Calculate agglomerative coefficient for each clustering linkage method
 sapply(m, ac) # Use the method with the highest coefficient, indicates better fit
 
-# Generate hierarchcial cluster
-no.tree = hclust(no,method="ward.D2")
+# Generate hierarchical cluster
+no.tree = hclust(no,method = "ward.D2")
 plot(no.tree)
 
-# Compare topology between phylogeny and niche overlap iwith a tanglegram
+# Compare topology between phylogeny and niche overlap with a tanglegram
 # This requires an ultrametric tree (or a dendrogram), where the branch lengths are equidistant from the root node.
-is.ultrametric(nj.rooted) #fasle
-#is.ultrametric(no.tree) #fasle
+is.ultrametric(nj.rooted) #false
+#is.ultrametric(no.tree) #false
 
 # To see the differences between each lake, we will drop tips from each dendrogram to plot tips that come from a single lake.
-LL.tree = drop.tip(nj.rooted,c(nj.rooted$tip.label[grepl("WG",nj.rooted$tip.label)]))
-LL.function = drop.tip(as.phylo(no.tree),c(no.tree$labels[grepl("WG",no.tree$labels)]))
+LL.tree = drop.tip(nj.rooted,c(nj.rooted$tip.label[grepl("WG", nj.rooted$tip.label)]))
+LL.function = drop.tip(as.phylo(no.tree), c(no.tree$labels[grepl("WG", no.tree$labels)]))
 
-WG.tree = drop.tip(nj.rooted,c(nj.rooted$tip.label[grepl("LL",nj.rooted$tip.label)]))
-WG.function = drop.tip(as.phylo(no.tree),c(no.tree$labels[grepl("LL",no.tree$labels)]))
+WG.tree = drop.tip(nj.rooted, c(nj.rooted$tip.label[grepl("LL",nj.rooted$tip.label)]))
+WG.function = drop.tip(as.phylo(no.tree), c(no.tree$labels[grepl("LL",no.tree$labels)]))
 
-# Plot each dendrogram and link their tips. An untangling algorithm is used to maximize alignment. For the tanglegram visualization, we will highlight any topology that is matching between the two dendrograms if present. Resource use similarity is on the right and phylogenetic relatedness is on the left
+# Plot each dendrogram and link their tips. 
+# An untangling algorithm is used to maximize alignment. 
+# For tanglegram visualization, highlight matches between the two dendrograms. 
+# Resource use similarity on right; phylogenetic relatedness on the left
 
-par(mar=c(1,5,1,5) + 0.1)
-dendlist(as.cladogram(as.dendrogram.phylo(LL.tree)),as.cladogram(as.dendrogram(LL.function))) %>%
+par(mar = c(1, 5, 1, 5) + 0.1)
+dendlist(as.cladogram(as.dendrogram.phylo(LL.tree)),
+  as.cladogram(as.dendrogram(LL.function))) %>%
   untangle(method = "step2side") %>% # Find the best alignment layout
-  tanglegram(common_subtrees_color_branches = TRUE,highlight_distinct_edges = FALSE, highlight_branches_lwd = FALSE,margin_inner=5) %>%# Draw the two dendrograms
+  tanglegram(common_subtrees_color_branches = TRUE, 
+  highlight_distinct_edges = FALSE, highlight_branches_lwd = FALSE,
+  margin_inner = 5) %>%# Draw the two dendrograms
   entanglement() #score between 0 and 1, closer to 0 is a better alignment
 
-par(mar=c(1,5,1,5) + 0.1)
-dendlist(as.cladogram(as.dendrogram.phylo(WG.tree)),as.cladogram(as.dendrogram(WG.function))) %>%
+par(mar = c(1, 5, 1, 5) + 0.1)
+dendlist(as.cladogram(as.dendrogram.phylo(WG.tree)),
+  as.cladogram(as.dendrogram(WG.function))) %>%
   untangle(method = "step2side") %>% # Find the best alignment layout
-  tanglegram(common_subtrees_color_branches = TRUE,highlight_distinct_edges = FALSE, highlight_branches_lwd = FALSE,margin_inner=5) %>%# Draw the two dendrograms
+  tanglegram(common_subtrees_color_branches = TRUE, 
+  highlight_distinct_edges = FALSE, highlight_branches_lwd = FALSE,
+  margin_inner = 5) %>%# Draw the two dendrograms
   entanglement() #score between 0 and 1, closer to 0 is a better alignment
 
-# Measure the degree of correspondence between each dendrogram 0 = complete congruence, 1 = complete incongruence
-RF.dist(LL.tree,as.phylo(as.dendrogram(LL.function)), normalize = TRUE, check.labels = TRUE,rooted = FALSE)
-RF.dist(WG.tree,as.phylo(as.dendrogram(WG.function)), normalize = TRUE, check.labels = TRUE,rooted = FALSE)
+# Measure the degree of correspondence between each dendrogram 
+# 0 = complete congruence, 1 = complete incongruence
+RF.dist(LL.tree,as.phylo(as.dendrogram(LL.function)), normalize = TRUE, 
+  check.labels = TRUE, rooted = FALSE)
+RF.dist(WG.tree, as.phylo(as.dendrogram(WG.function)), normalize = TRUE, 
+  check.labels = TRUE, rooted = FALSE)
 
-# Measure the correlation between patristic distance (pairwise sum of branch lengths) in the phylogeny and Jaccard index in the resource use hierarchical cluster with the Mantel test.
+# Mantel test to correlate patristic distance (pairwise sum of branch lengths) in phylogeny and Jaccard index in the resource use hierarchical cluster.
 
-mantel(cophenetic.phylo(LL.tree), cophenetic.phylo(LL.function), method="spearman", permutations=999)
+mantel(cophenetic.phylo(LL.tree), cophenetic.phylo(LL.function), 
+  method = "spearman", permutations = 999)
 
-mantel(cophenetic.phylo(WG.tree), cophenetic.phylo(WG.function), method="spearman", permutations=999)
+mantel(cophenetic.phylo(WG.tree), cophenetic.phylo(WG.function), 
+  method = "spearman", permutations = 999)
 ```
 
 From comparing several different metrics, we can see differences in niche overlap between each lake for the sampled taxa.
@@ -734,9 +748,9 @@ Often you will want to determine what stochastic model of evolution best describ
 To do this you will need to compare the fit of each model to your data and determine which provides the best fit. 
 An appropriate statistic to use is the difference in log-likelihood between our two models: $\delta = -2(log\: L_{0}-log\: L_{1} )$. 
 This is a common statistic and, whether or not you knew it, you used $\delta$ in Week2 when you calculated the fit of different species abundance distribution models using the Akaike information criterion (AIC). 
-However, determining which model describes the evolution of trait data along a phylogeny isn't as simple as performing an AIC comparison, as likelihood-based methods such as these have high error rates that can give us the wrong answer if we don't know the uncertainty of our estimates (Boettiger et al., 2012). 
+However, determining which model describes the evolution of trait data along a phylogeny is not as simple as performing an AIC comparison, as likelihood-based methods such as these have high error rates that can give us the wrong answer if we don't know the uncertainty of our estimates (Boettiger et al., 2012). 
 To get around this we can use Monte Carlo simulations to estimate the distribution of $\delta$ and determine which model is appropriate. 
-To do this we'll use the package Phylogenetic Monte Carlo (`pmc`) to determine whether Brownian motion or the Ornstein-Uhlenbeck model describes the evolution of niche breadth. From there we will plot our results using `ggplot2`. 
+To do this we'll use the package Phylogenetic Monte Carlo (`pmc`) to determine whether Brownian motion or the Ornstein-Uhlenbeck model describes the evolution of niche breadth. From there we will plot our results using the `ggplot2` package. 
 
 \begin{center}
 \hyphenpenalty 10000
@@ -784,7 +798,7 @@ colnames(dists) <- c("BM", "OU")
 
 #dev.off()
 
-png("./figs/H_test.png", width=480, height=240, res=120)
+png("./figs/H_test.png", width = 480, height = 240, res = 120)
 
 dists %>% 
   gather(model, value) %>%
@@ -799,14 +813,14 @@ dev.off()
 \vspace{24pt}
 ![Density plot of the difference in log-likelihood values ($\delta$)](figs/H_test.png)
 
-Because the Brownian motion and Ornstein-Uhlenbeck models are nested, the proportion of simulated values larger than our observed $\delta$ for the simpler model provides an approximation for the P-value (i.e. the probability that a difference at least as large would be seen under the null model). 
-Using a traditional alpha of 0.05, we can determine whether we should reject the null hypothesis that Brownian motion (i.e. our simpler model) adequately describes the evolution of niche breadth.  
+Because the Brownian motion and Ornstein-Uhlenbeck models are nested, the proportion of simulated values larger than our observed $\delta$ for the simpler model provides an approximation for the *P*-value (i.e., the probability that a difference at least as large would be seen under the null model). 
+Using a traditional alpha of 0.05, we can determine whether we should reject the null hypothesis that Brownian motion (i.e., our simpler model) adequately describes the evolution of niche breadth.  
 
 ```{r, eval = FALSE}
 length(dists$BM[dists$BM > out$lr]) / length(dists$BM)
 ```
 
-Where we get a value of zero, suggesting that our P-value is smaller than 0.01.
+Where we get a value of zero, suggesting that our *P*-value is smaller than 0.01.
 
 ## 7) PHYLOGENETIC REGRESSION ANALYSIS
 
@@ -825,8 +839,8 @@ For the phylogenetic regression, we will associate the maximum growth rate acros
 # Using the niche breadth data, create a column that indicates the lake origin of each strain
 nb.lake = as.data.frame(as.matrix(nb))
 nb.lake$lake = rep('A')
-for(i in 1:nrow(nb.lake)) {
-  ifelse(grepl("WG",row.names(nb.lake)[i]),nb.lake[i,2] <- "WG",nb.lake[i,2] <- "LL")
+  for(i in 1:nrow(nb.lake)) {
+    ifelse(grepl("WG",row.names(nb.lake)[i]), nb.lake[i,2] <- "WG", nb.lake[i,2] <- "LL")
 }
 
 #Add a meaningful column name to the niche breadth values
@@ -838,9 +852,9 @@ nb.lake = cbind(nb.lake,umax)
 
 # Plot maximum growth rate by niche breadth
 
-ggplot(data=nb.lake,aes(x=NB,y=log10(umax),color=lake)) +
+ggplot(data = nb.lake,aes(x = NB, y = log10(umax), color = lake)) +
   geom_point() +
-  geom_smooth(method="lm") +
+  geom_smooth(method = "lm") +
   xlab("Niche breadth") +
   ylab(expression(Log[10]~"(Maximum growth rate)"))
 ```
@@ -849,7 +863,7 @@ First let's run a simple linear regression.
 
 ```{r}
 # Simple linear regression
-fit.lm = lm(log10(umax) ~ NB*lake,data=nb.lake)
+fit.lm = lm(log10(umax) ~ NB*lake,data = nb.lake)
 summary(fit.lm)
 AIC(fit.lm)
 ```
@@ -858,7 +872,8 @@ Now let's correct for phylogeny using the `phylolm` function from the package `p
 
 ```{r,  tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 # Run a phylogeny-corrected regression with no bootstrap replicates
-fit.plm = phylolm(log10(umax) ~ NB*lake,data=nb.lake,nj.rooted,model="lambda",boot=0)
+fit.plm = phylolm(log10(umax) ~ NB*lake, data = nb.lake, nj.rooted, 
+          model = "lambda", boot = 0)
 summary(fit.plm)
 AIC(fit.plm)
 ```
