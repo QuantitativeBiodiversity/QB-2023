@@ -67,12 +67,10 @@ for (package in package.list) {
     library(package, character.only=TRUE)
   }
 }
-
 #some bioinformatics packages come through BioConductor, which has its own installing method
 if (!require("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
   }
-
 if(!require("msa",quietly = TRUE)) {
   BiocManager::install("msa") 
   }
@@ -122,7 +120,6 @@ R is a great data analysis language and has become a more all-inclusive environm
 ```{r}
 # Align sequences using default Muscle parameters {msa}
 read.aln = msaMuscle(seqs)
-
 #export alignment using bios2mds package
 save.aln = msaConvert(read.aln,type = "bios2mds::align")
 export.fasta(save.aln,"./data/p.isolates.afa")
@@ -142,13 +139,10 @@ Last, we will visualize the alignment by color-coding nucleotides different colo
 ```{r}
 # Convert Alignment to DNAbin Object {ape}
 p.DNAbin <- as.DNAbin(read.aln) 
-
 # Identify Base Pair Region of 16S rRNA Gene to Visuzlize
 window <- p.DNAbin[, 100:500] 
-
 # Command to Visualize Sequence Alignment {ape}
 image.DNAbin(window, cex.lab = 0.50) 
-
 # Optional Code Adds Grid to Help Visualize Rows of Sequences 
 #grid(ncol(window), nrow(window), col = "lightgrey") 
 ```
@@ -217,13 +211,10 @@ At this point, we can plot our tree:
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 # Neighbor Joining Algorithm to Construct Tree, a 'phylo' Object {ape}
 nj.tree <- bionj(seq.dist.raw)
-
 # Identify Outgroup Sequence
 outgroup <- match("Methanosarcina", nj.tree$tip.label)
-
 # Root the Tree {ape}
 nj.rooted <- root(nj.tree, outgroup, resolve.root = TRUE)
-
 # Plot the Rooted Tree{ape}
 par(mar = c(1,1,2,1) + 0.1)
 plot.phylo(nj.rooted, main = "Neighbor Joining Tree", "phylogram", 
@@ -299,22 +290,18 @@ This will give us a visual sense of whether or not the two trees are in agreemen
 # Make Neighbor Joining Trees Using Different DNA Substitution Models {ape}
 raw.tree <- bionj(seq.dist.raw)
 F84.tree <- bionj(seq.dist.F84)
-
 # Define Outgroups
 raw.outgroup <- match("Methanosarcina", raw.tree$tip.label) 
 F84.outgroup <- match("Methanosarcina", F84.tree$tip.label) 
-
 # Root the Trees {ape}
 raw.rooted <- root(raw.tree, raw.outgroup, resolve.root = TRUE) 
 F84.rooted <- root(F84.tree, F84.outgroup, resolve.root = TRUE)
-
 # Make Cophylogenetic Plot {ape}
 layout(matrix(c(1,2), 1, 2), width = c(1, 1))
 par(mar = c(1, 1, 2, 0))
 plot.phylo(raw.rooted, type = "phylogram", direction = "right", 
       show.tip.label = TRUE, use.edge.length = FALSE, adj = 0.5, 
       cex = 0.6, label.offset = 2, main = "Raw")
-
 par(mar = c(1, 0, 2, 1))
 plot.phylo(F84.rooted, type = "phylogram", direction = "left", 
       show.tip.label = TRUE, use.edge.length = FALSE, adj = 0.5, 
@@ -355,8 +342,12 @@ However, below we have supplied code using functions from the package `phangorn`
 
 ```{r, eval = FALSE}
 # Requires alignment to be read in with as phyDat object
-p.DNAbin.phyDat <- read.phyDat("./data/p.isolates.afa", format = "fasta", type = "DNA")
-fit <- pml(nj.rooted, data = p.DNAbin.phyDat) ###### Won't run for Jay
+phyDat.aln = msaConvert(read.aln,type="phangorn::phyDat")
+
+# Make the NJ tree for the maximum likelihood method. {Phangorn} requires a specific attr class, so we will remake our trees with the following code.
+aln.dist = dist.ml(phyDat.aln)
+aln.NJ = NJ(aln.dist)
+
 # Fit tree using a JC69 substitution model
 fitJC <- optim.pml(fit, TRUE)
 # Fit tree using a GTR model with gamma distributed rates.
@@ -366,7 +357,6 @@ fitGTR <- optim.pml(fitGTR, model = "GTR", optInv = TRUE, optGamma = TRUE,
 anova(fitJC, fitGTR)
 AIC(fitJC)
 AIC(fitGTR)
-
 # And you can perform a bootstrap test to see how well-supported the edges are
 bs = bootstrap.pml(fitJC, bs=100, optNni=TRUE,
   control = pml.control(trace = 0))
@@ -421,7 +411,6 @@ With this information we will visualize the functional traits (i.e., growth on d
 # Import Growth Rate Data
 p.growth <- read.table("./data/p.isolates.raw.growth.txt", sep = "\t", 
             header = TRUE, row.names = 1)
-
 # Standardize Growth Rates Across Strains
 p.growth.std <- p.growth / (apply(p.growth, 1, sum))
 ```
@@ -460,7 +449,6 @@ Let us apply our `nb()` function to the isolate growth rate data on the differen
 ```{r}
 # Calculate Niche Breadth for Each Isolate
 nb <- as.matrix(levins(p.growth.std))
-
 # Add Row Names to Niche Breadth Matrix
 nb <- setNames(as.vector(nb), as.matrix(row.names(p.growth)))
 ```  
@@ -477,16 +465,13 @@ Last, we need to remove the root, because this is not part of our trait analysis
 ```{r}
 # Generate Neighbor Joining Tree Using F84 DNA Substitution Model {ape}
 nj.tree <- bionj(seq.dist.F84) 
-
 # Define the Outgroup
 outgroup <- match("Methanosarcina", nj.tree$tip.label)
-
 # Create a Rooted Tree {ape}
 nj.rooted <- root(nj.tree, outgroup, resolve.root = TRUE)
  
 # Keep Rooted but Drop Outgroup Branch
 nj.rooted <- drop.tip(nj.rooted, "Methanosarcina")
-
 # Plot to look at our tree
 plot(nj.rooted)
 ```
@@ -498,11 +483,9 @@ Here, we will do both.
 ```{r}
 # Define Color Palette
 mypalette <- colorRampPalette(brewer.pal(9, "YlOrRd"))
-
 # First, Correct for Zero Branch-Lengths on Our Tree
 nj.plot = nj.rooted
 nj.plot$edge.length <- nj.plot$edge.length + 10^-1
-
 # Map Phosphorus Traits {adephylo}
 par(mar = c(1, 1, 1, 1) + 0.1)
 x <- phylo4d(nj.plot, p.growth.std)
@@ -511,7 +494,6 @@ table.phylo4d(x, treetype = "phylo", symbol = "colors", show.node = TRUE,
               edge.color = "black", edge.width = 2, box = FALSE, 
               col=mypalette(25), pch = 15, cex.symbol = 1.25, 
               ratio.tree = 0.5, cex.legend = 1.5, center = FALSE)   
-
 # Niche Breadth
 par(mar = c(1, 5, 1, 5) + 0.1)
 x.nb <- phylo4d(nj.plot, nb)
@@ -543,7 +525,6 @@ Let's look at what happens when we transform our tree with lambda values of 1, 0
 # Visualize Trees With Different Levels of  Phylogenetic Signal {geiger}
 nj.lambda.5 <- geiger::rescale(nj.rooted, "lambda", 0.5)
 nj.lambda.0 <- geiger::rescale(nj.rooted, "lambda", 0)
-
 layout(matrix(c(1,2,3), 1, 3), width = c(1, 1, 1))
 par(mar=c(1,0.5,2,0.5)+0.1) 
 plot(nj.rooted, main = "lambda = 1", cex = 0.7, adj = 0.5)
@@ -588,24 +569,20 @@ We are going to correct for FDR using the Benjamini-Hochberg method ("PIC.P.BH")
 ```{r}
 # First, Correct for Zero Branch-Lengths on Our Tree
 nj.rooted$edge.length <- nj.rooted$edge.length + 10^-7
-
 # Calculate Phylogenetic Signal for Growth on All Phosphorus Resources
 # First, Create a Blank Output Matrix
 p.phylosignal <- matrix(NA, 6, 18)
 colnames(p.phylosignal) <- colnames(p.growth.std)
 rownames(p.phylosignal) <- c("K", "PIC.var.obs", "PIC.var.mean", 
                              "PIC.var.P", "PIC.var.z", "PIC.P.BH")
-
 # Use a For Loop to Calculate Blomberg's K for Each Resource
 for (i in 1:18){
   x <- setNames(as.vector(p.growth.std[,i]),row.names(p.growth))
   out <- phylosignal(x, nj.rooted)
   p.phylosignal[1:5, i] <- round(t(out), 3)
 }
-
 # Use the BH Correction on P-values: 
 p.phylosignal[6, ] <- round(p.adjust(p.phylosignal[4, ], method = "BH"), 3)
-
 # Check out the results
 print(p.phylosignal)
 ```
@@ -648,13 +625,10 @@ Let's use this function to calculate dispersion (*D*) on a few of our phosphorus
 ```{r, results = 'hide', message = FALSE, warning = FALSE}
 # Turn Continuous Data into Categorical Data
 p.growth.pa <- as.data.frame((p.growth > 0.01) * 1)
-
 # Look at Phosphorus Use for Each Resource
 apply(p.growth.pa, 2, sum)
-
 # Add Names Column to Data
 p.growth.pa$name <- rownames(p.growth.pa)
-
 # Merge Trait and Phylogenetic Data; Run `phylo.d`
 p.traits <- comparative.data(nj.rooted, p.growth.pa, "name")
 phylo.d(p.traits, binvar = AEP,permut = 10000)
@@ -662,12 +636,8 @@ phylo.d(p.traits, binvar = PhenylCP,permut = 10000)
 phylo.d(p.traits, binvar = DNA,permut = 10000)
 phylo.d(p.traits, binvar = cAMP,permut = 10000)
 ```
-
-
 ### D. Determine correspondence between evolutionary history and ecology
-
 So far we have quantified the distribution of traits along the phylogeny. We can also draw a dendrogram based on our traits to visualize similarities in traits among species independent of phylogeny. This will allow us to visualize the degree that, for example, phylogeny, resource use, and environment influence the species we are studying. For the case of our phosphorus use data, we can see the degree that phylogenetic relationships and lake origin have on our resource use data. To create a dendrogram of resource use, we will make a hierarchical agglomerative cluster of the binary trait data. The  benefit is that we get an additional layer of information from clustering resource use. A hierarchical cluster will allow us to visualize the pairwise similarity among species for resource use, which we can use to infer **niche overlap**. Niche overlap indicates the potential for exploitative competition among taxa at each site because two taxa may compete for the same resource. Here we will map our trait data onto the phylogeny to compare the hierarchical structures in each dataset. We can compare our two dendrograms using a **tanglegram** (a plot that shows the alignment between two dendrograms), Robinson-Fould metric, and a Mantel correlation test.
-
 ```{r}
 # Generate Jaccard's index (dissimilarity)
 no = vegdist(p.growth.pa[,1:18], method = 'jaccard', binary = TRUE) 
@@ -739,11 +709,8 @@ mantel(cophenetic.phylo(LL.tree), cophenetic.phylo(LL.function),
 mantel(cophenetic.phylo(WG.tree), cophenetic.phylo(WG.function), 
   method = "spearman", permutations = 999)
 ```
-
 From comparing several different metrics, we can see differences in niche overlap between each lake for the sampled taxa.
-
 ### E. Compare evolutionary models
-
 Often you will want to determine what stochastic model of evolution best describes your data. 
 To do this you will need to compare the fit of each model to your data and determine which provides the best fit. 
 An appropriate statistic to use is the difference in log-likelihood between our two models: $\delta = -2(log\: L_{0}-log\: L_{1} )$. 
@@ -784,22 +751,16 @@ For example, Pagel's $\lambda$ is just the simple Brownian motion model with the
 # Pagel's lambda = lambda
 is.ultrametric(nj.rooted)
 nj.rooted.um <- force.ultrametric(nj.rooted)
-
 out <- pmc(nj.rooted.um, nb, "BM", "OU", nboot = 100)
-
 # After running the above (took a long time) I got the following error:
 # Warning message:
 # In fitContinuous(phy = tree, dat = data, model = model, ..., ncores = 1) :
 #   Parameter estimates appear at bounds:
 # 	alpha
-
 dists <- data.frame(null = out$null, test = out$test)
 colnames(dists) <- c("BM", "OU")
-
 #dev.off()
-
 png("./figs/H_test.png", width = 480, height = 240, res = 120)
-
 dists %>% 
   gather(model, value) %>%
   ggplot(aes(value, fill = model)) + 
@@ -842,16 +803,12 @@ nb.lake$lake = rep('A')
   for(i in 1:nrow(nb.lake)) {
     ifelse(grepl("WG",row.names(nb.lake)[i]), nb.lake[i,2] <- "WG", nb.lake[i,2] <- "LL")
 }
-
 #Add a meaningful column name to the niche breadth values
 colnames(nb.lake)[1] <- "NB"
-
 #Calculate the max growth rate
 umax <- as.matrix((apply(p.growth, 1, max))) 
 nb.lake = cbind(nb.lake,umax)
-
 # Plot maximum growth rate by niche breadth
-
 ggplot(data = nb.lake,aes(x = NB, y = log10(umax), color = lake)) +
   geom_point() +
   geom_smooth(method = "lm") +
