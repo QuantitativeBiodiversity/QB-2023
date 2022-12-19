@@ -342,8 +342,12 @@ However, below we have supplied code using functions from the package `phangorn`
 
 ```{r, eval = FALSE}
 # Requires alignment to be read in with as phyDat object
-p.DNAbin.phyDat <- read.phyDat("./data/p.isolates.afa", format = "fasta", type = "DNA")
-fit <- pml(nj.rooted, data = p.DNAbin.phyDat) ###### Won't run for Jay
+phyDat.aln = msaConvert(read.aln,type="phangorn::phyDat")
+
+# Make the NJ tree for the maximum likelihood method. {Phangorn} requires a specific attr class, so we will remake our trees with the following code.
+aln.dist = dist.ml(phyDat.aln)
+aln.NJ = NJ(aln.dist)
+
 # Fit tree using a JC69 substitution model
 fitJC <- optim.pml(fit, TRUE)
 # Fit tree using a GTR model with gamma distributed rates.
