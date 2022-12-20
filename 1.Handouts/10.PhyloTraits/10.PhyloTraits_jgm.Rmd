@@ -104,24 +104,25 @@ In the example below, we will be using a local alignment approach.
 We will read in a FASTA-formatted file into the `muscle` alignment program, a common aligner used for protein and 16S rRNA gene sequences.
 FASTA is a very common text-based format that is used across platforms and disciplines. 
 The files contain DNA sequences (e.g., CTAAG) and names that are associated with samples. 
-Let's take a second to look at the *p.isolates.fasta* file. We can use the `Biostrings` package to load our sequences into the R environment and do a quick check to make sure they look correct.
+Let us take a second to look at the *p.isolates.fasta* file. We can use the `Biostrings` package to load our sequences into the R environment and do a quick check to make sure they look correct.
 
 ```{r}
 # Import sequences {Biostrings}
-seqs = readDNAStringSet("./data/p.isolates.fasta", format = 'fasta')
+seqs <- readDNAStringSet("./data/p.isolates.fasta", format = 'fasta')
 seqs # View sequences
 ```
 
 
 ### B.  Performing an Alignment 
 
-R is a great data analysis language and has become a more all-inclusive environment for biologists to conduct bioinformatic analyses. Fortunately, for the instances when other tools are needed that we cannot do with R, such as with Bash or Python based tools, the R language and R Studio environment can be made to interact with other software and computing languages. We won't explore this today, but it is good to know and enhances our ability to do reproducible science. Using the `msa` package, we can align the sequences we loaded into the R Studio environment.
+R is a great data analysis language and has become a more all-inclusive environment for biologists to conduct bioinformatic analyses. Fortunately, for the instances when other tools are needed that we cannot do with R, such as with Bash or Python based tools, the R language and R Studio environment can be made to interact with other software and computing languages. We will not explore this today, but it is good to know and enhances our ability to do reproducible science. Using the `msa` package, we can align the sequences we loaded into the R Studio environment.
   
 ```{r}
 # Align sequences using default Muscle parameters {msa}
-read.aln = msaMuscle(seqs)
+read.aln <- msaMuscle(seqs)
+
 #export alignment using bios2mds package
-save.aln = msaConvert(read.aln,type = "bios2mds::align")
+save.aln <- msaConvert(read.aln,type = "bios2mds::align")
 export.fasta(save.aln,"./data/p.isolates.afa")
 ```
 
@@ -139,12 +140,12 @@ Last, we will visualize the alignment by color-coding nucleotides different colo
 ```{r}
 # Convert Alignment to DNAbin Object {ape}
 p.DNAbin <- as.DNAbin(read.aln) 
+
 # Identify Base Pair Region of 16S rRNA Gene to Visuzlize
 window <- p.DNAbin[, 100:500] 
+
 # Command to Visualize Sequence Alignment {ape}
 image.DNAbin(window, cex.lab = 0.50) 
-# Optional Code Adds Grid to Help Visualize Rows of Sequences 
-#grid(ncol(window), nrow(window), col = "lightgrey") 
 ```
 
 An inspection of the figure suggests that our alignment is good because many vertical bars are aligned with the same color, indicating they share the same nucleotide at that site. If this visualization showed a jumbled mess, we may want to realign our sequences using different parameters or a different programs. You might also want to consider the quality of the data. Sometimes we may also find that some areas poorly align and need to be removed from our final alignment to make sure we only retain phylogenetically informative sites. Tools like GBlocks or TrimAI can be very useful. GBlocks can be implemented with the `ips` package.
@@ -164,16 +165,16 @@ It is not possible to cover all of these topics in Quantitative Biodiversity, bu
   \textbf{Tree Method} & \textbf{Properties} \\
   \hline \hline \\ [-1.5ex]
   \textbf{UPGMA} & 
-  Unweighted Pair Group Method with Arithmetic Mean is a hierarchical clustering technique. It progressively groups the most similar pairs of sequences. Sometimes used as a guide tree for more sophisticated phylogenetic analyses, but prone to distorting tree topology and assumes constant rates of evolution. UPGMA can be implemented in R with the $\emph{upgma()}$ function in the `panghorn` package.\\
+  Unweighted Pair Group Method with Arithmetic Mean is a hierarchical clustering technique. It progressively groups the most similar pairs of sequences. Sometimes used as a guide tree for more sophisticated phylogenetic analyses, but prone to distorting tree topology and assumes constant rates of evolution. UPGMA can be implemented in R with the `upgma()` function in the `panghorn` package.\\
   \\ [-1.5ex]
   \textbf{Neighbor Joining} & 
-  Starts with an unresolved tree in a "star network". Algorithm then identifies the two most similar taxa and creates a node. This process is iteratively applied to the remaining sequences. Can serve as a starting point for assessing evolutionary models with more sophisticated methods like maximum likelihood. Neighbor joining can be implemented in the R package `ape` using the $\emph{bionj()}$ function. \\
+  Starts with an unresolved tree in a "star network". Algorithm then identifies the two most similar taxa and creates a node. This process is iteratively applied to the remaining sequences. Can serve as a starting point for assessing evolutionary models with more sophisticated methods like maximum likelihood. Neighbor joining can be implemented in the R package `ape` using the `emph{bionj()` function. \\
   \\ [-1.5ex]  
   \textbf{Maximum Parsimony} & 
-  A character-based, non-parametric approach that involves identifying one of many possible trees based on the minimum number of evolutionary "steps" (i.e., the most parsimonious tree). No underlying evolutionary model. Maximum parsimony can be executed using the $\emph{parsimony()}$ function in the package `panghorn` The function $\emph{optim.parsimony()}$ performs tree rearrangements using nearest-neighbor interchanges (NNI) to optimize parsimony scores.\\
+  A character-based, non-parametric approach that involves identifying one of many possible trees based on the minimum number of evolutionary "steps" (i.e., the most parsimonious tree). No underlying evolutionary model. Maximum parsimony can be executed using the `parsimony()` function in the package `panghorn` The function `optim.parsimony()` performs tree rearrangements using nearest-neighbor interchanges (NNI) to optimize parsimony scores.\\
   \\ [-1.5ex]   
   \textbf{Maximum Likelihood} & 
-  Parametric approach to identifying the relative probability associated with data fitting a given model of character evolution. One of the most commonly used approaches for building trees from sequence data. Statistically sound and flexible for accommodating realistic models of sequence evolution. Maximum likelihood can be implemented in R using the $\emph{pml()}$ function in the `panghorn` package. Parameters can be optimized using the $\emph{optim.pml()}$ function and evolutionary models can be compared with the $\emph{model.tests()}$ function\\
+  Parametric approach to identifying the relative probability associated with data fitting a given model of character evolution. One of the most commonly used approaches for building trees from sequence data. Statistically sound and flexible for accommodating realistic models of sequence evolution. Maximum likelihood can be implemented in R using the `pml()` function in the `panghorn` package. Parameters can be optimized using the `optim.pml()` function and evolutionary models can be compared with the `model.tests()` function\\
   \\ [-1.5ex]  
   \textbf{Bayesian} & 
   Uses likelihood function and prior probabilities to create a posterior probability of a tree fitting a given model of evolution. Computationally intensive; often uses Markov chain Monte Carlo (MCMC). Unlike other methods, parameters are not constant; rather, they come from probabilistic distributions. Along with maximum likelihood, considered one of the more preferable ways of generating trees. R has some packages (e.g., `ips`) the wrap popular Bayesian software such as MrBayes.\\
@@ -211,10 +212,13 @@ At this point, we can plot our tree:
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 # Neighbor Joining Algorithm to Construct Tree, a 'phylo' Object {ape}
 nj.tree <- bionj(seq.dist.raw)
+
 # Identify Outgroup Sequence
 outgroup <- match("Methanosarcina", nj.tree$tip.label)
+
 # Root the Tree {ape}
 nj.rooted <- root(nj.tree, outgroup, resolve.root = TRUE)
+
 # Plot the Rooted Tree{ape}
 par(mar = c(1,1,2,1) + 0.1)
 plot.phylo(nj.rooted, main = "Neighbor Joining Tree", "phylogram", 
@@ -268,7 +272,7 @@ Let us create a distance matrix among our bacterial isolates based on the Felsen
 seq.dist.F84 <- dist.dna(p.DNAbin, model = "F84", pairwise.deletion = FALSE)
 ```
 
-Now, let's compare the "raw" and "F84" distance matrices. 
+Now, let us compare the "raw" and "F84" distance matrices. 
 First, we will make a **saturation plot**, which allow us to visualize the effect of our DNA substitution model compared to a distance matrix that does not include this feature. 
 
 ```{r}
@@ -290,12 +294,15 @@ This will give us a visual sense of whether or not the two trees are in agreemen
 # Make Neighbor Joining Trees Using Different DNA Substitution Models {ape}
 raw.tree <- bionj(seq.dist.raw)
 F84.tree <- bionj(seq.dist.F84)
+
 # Define Outgroups
 raw.outgroup <- match("Methanosarcina", raw.tree$tip.label) 
 F84.outgroup <- match("Methanosarcina", F84.tree$tip.label) 
+
 # Root the Trees {ape}
 raw.rooted <- root(raw.tree, raw.outgroup, resolve.root = TRUE) 
 F84.rooted <- root(F84.tree, F84.outgroup, resolve.root = TRUE)
+
 # Make Cophylogenetic Plot {ape}
 layout(matrix(c(1,2), 1, 2), width = c(1, 1))
 par(mar = c(1, 1, 2, 0))
@@ -318,7 +325,7 @@ The branch length score between trees $T$ and ${T}'$ can be described as $BLS(T,
 This function should look familiar, since it is just the squared Euclidean distance between two trees and it ranges from values of 0 to 1. 
 The history, appropriateness, and limitations of these methods are nicely discussed in chapter 30 of Felsenstein (2004).
 
-Here we'll calculate branch length score between the raw tree and the tree calculated with F84 distances.
+Here we will calculate branch length score between the raw tree and the tree calculated with F84 distances.
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 # Set method = "PH85" for the symmetric difference
@@ -331,7 +338,7 @@ dist.topo(raw.rooted, F84.rooted, method = "score")
 ### D) MAXIMUM LIKELIHOOD TREE
 Often a nearest neighbor joined tree does not accurately reconstruct the real phylogeny. 
 While neighbor joining is very fast and has the convenient property of returning the correct tree for a correct distance matrix, we are rarely in the position where we know the correct distance matrix. 
-Neighbor joining has some other shortcomings. First, it only uses a distance matrix, which doesn't take into account specific nucleotide states. Second, it only gives one tree, meaning that it is not a statistical method. Last, it can be sensitive to the underlying substitution model.  
+Neighbor joining has some other shortcomings. First, it only uses a distance matrix, which does not take into account specific nucleotide states. Second, it only gives one tree, meaning that it is not a statistical method. Last, it can be sensitive to the underlying substitution model.  
 
 Instead, a maximum likelihood (ML) tree is often a superior choice, as it is built on the robust statistical procedure of ML (i.e., the process of finding the parameter value that maximizes the likelihood of the data). 
 In addition, ML has the advantage of being the estimation method that is least affected by sampling error, is fairly robust to the assumptions of a particularly model, allows you to compare different trees, and takes into account nucleotide states (as opposed to just distance). 
@@ -342,24 +349,28 @@ However, below we have supplied code using functions from the package `phangorn`
 
 ```{r, eval = FALSE}
 # Requires alignment to be read in with as phyDat object
-phyDat.aln = msaConvert(read.aln,type="phangorn::phyDat")
+phyDat.aln <- msaConvert(read.aln,type = "phangorn::phyDat")
 
-# Make the NJ tree for the maximum likelihood method. {Phangorn} requires a specific attr class, so we will remake our trees with the following code.
-aln.dist = dist.ml(phyDat.aln)
-aln.NJ = NJ(aln.dist)
+# Make the NJ tree for the maximum likelihood method. 
+# {Phangorn} requires a specific attribute (attr) class.
+# So we need to remake our trees with the following code:
+aln.dist <- dist.ml(phyDat.aln)
+aln.NJ <- NJ(aln.dist)
 
 # Fit tree using a JC69 substitution model
 fitJC <- optim.pml(fit, TRUE)
+
 # Fit tree using a GTR model with gamma distributed rates.
-fitGTR <- optim.pml(fitGTR, model = "GTR", optInv = TRUE, optGamma = TRUE,
-#  rearrangement = "NNI", control = pml.control(trace = 0))
-# You can perform model selection with either an ANOVA test or by AIC value
+fitGTR <- optim.pml(fitGTR, model = "GTR", optInv = TRUE, optGamma = TRUE, 
+          rearrangement = "NNI", control = pml.control(trace = 0))
+
+# Perform model selection with either an ANOVA test or with AIC
 anova(fitJC, fitGTR)
 AIC(fitJC)
 AIC(fitGTR)
+
 # And you can perform a bootstrap test to see how well-supported the edges are
-bs = bootstrap.pml(fitJC, bs=100, optNni=TRUE,
-  control = pml.control(trace = 0))
+bs <- bootstrap.pml(fitJC, bs = 100, optNni = TRUE, control = pml.control(trace = 0))
 ```
 
 ### E) BOOTSTRAP SUPPORT
@@ -367,7 +378,7 @@ bs = bootstrap.pml(fitJC, bs=100, optNni=TRUE,
 Because building a phylogenetic tree is very much a statistical exercise we often want to know how confident we are in the placement of each branch in our phylogeny. 
 For example, say that we make a tree today and tomorrow we run the same code, but get a tree with a node in a different place. 
 How do we know which tree is correct? 
-Since we don't know the real tree, we wil use the next best thing. 
+Since we do not know the real tree, we wil use the next best thing. 
 We will re-sample our own data to determine how reliable the tree is. 
 This process is known as **bootstrapping**. 
 To perform bootstrapping, we will select a subset of columns from our alignment randomly with replacement. 
@@ -392,7 +403,7 @@ nodelabels(ml.bootstrap$node.label, font = 2, bg = "white", frame = "r", cex = 0
 R is useful for a lot of things, but it is not optimized for phylogenetic reconstruction and therefore can be extremely slow. 
 If you need to make a phylogeny with more than a dozen or so taxa, then you may need to use packages that do not easily run in an R environment. 
 Two of the packages that you will want to check out is the (1) Randomized Axelerated Maximum Likelihood (RAxML) package (http://sco.h-its.org/exelixis/web/software/raxml/index.html) and (2) IQ-Tree package (http://www.iqtree.org/) for generating maximum likelihood trees with bootstrap support. IQ-Tree is particular has the added benefit of performing your model testing as part of your reconstruction pipeline, tends to be more effiecient, and has really useful tutorials.
-If you're dealing with communities with a large number of taxa (e.g., 16S rRNA amplicon data from microbial communities), programs like RAxML may be too slow. Here you can use the program FastTree to generate approximately-maximum-likelihood phylogenetic trees, sacrificing exactness for speed (http://www.microbesonline.org/fasttree/). 
+If you are dealing with communities with a large number of taxa (e.g., 16S rRNA amplicon data from microbial communities), programs like RAxML may be too slow. Here you can use the program FastTree to generate approximately-maximum-likelihood phylogenetic trees, sacrificing exactness for speed (http://www.microbesonline.org/fasttree/). 
 
 If you are interested in learning more about how to get started, Young and Gillung (2019) is a nice primer for phylogenetics and phylogenomics (https://tinyurl.com/3us9b9uu).
 
@@ -519,7 +530,7 @@ Mark Pagel developed a fairly simple technique to quantify phylogenetic signal, 
 The transformation is accomplished by scaling the off-diagonal elements of the variance-covariance matrix, which describe the tree topology and branch lengths, by the value "lambda".
 When lambda equals 1, you have your original, non-transformed branch lengths. 
 When lambda equals 0, you have removed all phylogenetic signal from your tree. 
-Let's look at what happens when we transform our tree with lambda values of 1, 0.5, and 0. 
+Let us look at what happens when we transform our tree with lambda values of 1, 0.5, and 0. 
 
 ```{r}
 # Visualize Trees With Different Levels of  Phylogenetic Signal {geiger}
@@ -620,7 +631,7 @@ When *D* is close 0, traits are randomly clumped.
 When *D* is close to 1, traits are dispersed in a way that is consistent with Brownian motion. 
 
 The `phylo.d()` function uses a permutation test to calculate the probability of *D* being different from 1 (no phylogenetic structure; random) or 0 (Brownian phylogenetic structure).
-Let's use this function to calculate dispersion (*D*) on a few of our phosphorus traits. If we look at the statistical differences from 0 and 1, make sure to adjust the *P* value threshold to correct for multiple tests. In this case, we can use Bonferroni correction (0.05/2 = 0.025).
+Let us use this function to calculate dispersion (*D*) on a few of our phosphorus traits. If we look at the statistical differences from 0 and 1, make sure to adjust the *P* value threshold to correct for multiple tests. In this case, we can use Bonferroni correction (0.05/2 = 0.025).
 
 ```{r, results = 'hide', message = FALSE, warning = FALSE}
 # Turn Continuous Data into Categorical Data
@@ -715,9 +726,9 @@ Often you will want to determine what stochastic model of evolution best describ
 To do this you will need to compare the fit of each model to your data and determine which provides the best fit. 
 An appropriate statistic to use is the difference in log-likelihood between our two models: $\delta = -2(log\: L_{0}-log\: L_{1} )$. 
 This is a common statistic and, whether or not you knew it, you used $\delta$ in Week2 when you calculated the fit of different species abundance distribution models using the Akaike information criterion (AIC). 
-However, determining which model describes the evolution of trait data along a phylogeny is not as simple as performing an AIC comparison, as likelihood-based methods such as these have high error rates that can give us the wrong answer if we don't know the uncertainty of our estimates (Boettiger et al., 2012). 
+However, determining which model describes the evolution of trait data along a phylogeny is not as simple as performing an AIC comparison, as likelihood-based methods such as these have high error rates that can give us the wrong answer if we do not know the uncertainty of our estimates (Boettiger et al., 2012). 
 To get around this we can use Monte Carlo simulations to estimate the distribution of $\delta$ and determine which model is appropriate. 
-To do this we'll use the package Phylogenetic Monte Carlo (`pmc`) to determine whether Brownian motion or the Ornstein-Uhlenbeck model describes the evolution of niche breadth. From there we will plot our results using the `ggplot2` package. 
+To do this we will use the package Phylogenetic Monte Carlo (`pmc`) to determine whether Brownian motion or the Ornstein-Uhlenbeck model describes the evolution of niche breadth. From there we will plot our results using the `ggplot2` package. 
 
 \begin{center}
 \hyphenpenalty 10000
@@ -816,7 +827,7 @@ ggplot(data = nb.lake,aes(x = NB, y = log10(umax), color = lake)) +
   ylab(expression(Log[10]~"(Maximum growth rate)"))
 ```
 
-First let's run a simple linear regression.
+First let us run a simple linear regression.
 
 ```{r}
 # Simple linear regression
@@ -825,7 +836,7 @@ summary(fit.lm)
 AIC(fit.lm)
 ```
 
-Now let's correct for phylogeny using the `phylolm` function from the package `phylolm`.
+Now let us correct for phylogeny using the `phylolm` function from the package `phylolm`.
 
 ```{r,  tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 # Run a phylogeny-corrected regression with no bootstrap replicates
