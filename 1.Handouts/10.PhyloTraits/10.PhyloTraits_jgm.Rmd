@@ -357,11 +357,13 @@ phyDat.aln <- msaConvert(read.aln,type = "phangorn::phyDat")
 aln.dist <- dist.ml(phyDat.aln)
 aln.NJ <- NJ(aln.dist)
 
+fit <- pml(tree=aln.NJ,data=phyDat.aln)
+
 # Fit tree using a JC69 substitution model
 fitJC <- optim.pml(fit, TRUE)
 
 # Fit tree using a GTR model with gamma distributed rates.
-fitGTR <- optim.pml(fitGTR, model = "GTR", optInv = TRUE, optGamma = TRUE, 
+fitGTR <- optim.pml(fit, model = "GTR", optInv = TRUE, optGamma = TRUE, 
           rearrangement = "NNI", control = pml.control(trace = 0))
 
 # Perform model selection with either an ANOVA test or with AIC
@@ -370,7 +372,11 @@ AIC(fitJC)
 AIC(fitGTR)
 
 # And you can perform a bootstrap test to see how well-supported the edges are
-bs <- bootstrap.pml(fitJC, bs = 100, optNni = TRUE, control = pml.control(trace = 0))
+# Bootstrapping is computationally expensive, so it will take a couple minutes to run.
+bs <- bootstrap.pml(fitGTR, bs = 100, optNni = TRUE, control = pml.control(trace = 0))
+
+# Plot your bootstrap values onto the tree to visualize results. We will plot bootstrap replicates greater than 50%
+plotBS(midpoint(fitGTR$tree), bs, p = 50, type="p")
 ```
 
 ### E) BOOTSTRAP SUPPORT
@@ -385,7 +391,8 @@ To perform bootstrapping, we will select a subset of columns from our alignment 
 Next we will use that sample to construct a new tree and compare its topology to the original tree. 
 Each interior branch of the original tree that is different from the bootstrap tree gets a score of 0 while all other interior branches get a score of 1. 
 This procedure is done a large number of times (typically 100 - 10,000, depending on the size of the tree) and it gives us the **bootstrap value** for each interior branch. 
-A general rule of thumb is to treat bootstrap values 95% or higher as operationally correct. 
+A general rule of thumb is to treat bootstrap values 95% or higher as operationally correct.
+Nodes with >70% have moderate support and nodes of 50% or less are insufficiently resolved.
 Again, because this procedure is computationally intensive you will plot bootstrap support values for a tree that has been previously generated. 
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
@@ -762,15 +769,18 @@ For example, Pagel's $\lambda$ is just the simple Brownian motion model with the
 # Pagel's lambda = lambda
 is.ultrametric(nj.rooted)
 nj.rooted.um <- force.ultrametric(nj.rooted)
+
 out <- pmc(nj.rooted.um, nb, "BM", "OU", nboot = 100)
 # After running the above (took a long time) I got the following error:
 # Warning message:
 # In fitContinuous(phy = tree, dat = data, model = model, ..., ncores = 1) :
 #   Parameter estimates appear at bounds:
 # 	alpha
+
 dists <- data.frame(null = out$null, test = out$test)
 colnames(dists) <- c("BM", "OU")
 #dev.off()
+
 png("./figs/H_test.png", width = 480, height = 240, res = 120)
 dists %>% 
   gather(model, value) %>%
@@ -811,7 +821,8 @@ For the phylogenetic regression, we will associate the maximum growth rate acros
 # Using the niche breadth data, create a column that indicates the lake origin of each strain
 nb.lake = as.data.frame(as.matrix(nb))
 nb.lake$lake = rep('A')
-  for(i in 1:nrow(nb.lake)) {
+
+for(i in 1:nrow(nb.lake)) {
     ifelse(grepl("WG",row.names(nb.lake)[i]), nb.lake[i,2] <- "WG", nb.lake[i,2] <- "LL")
 }
 #Add a meaningful column name to the niche breadth values
