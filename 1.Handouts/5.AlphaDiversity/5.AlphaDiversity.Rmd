@@ -471,7 +471,7 @@ As a result, there are there are dozens of models that have attempted to explain
 In some cases, these models attempt to predict the form of the RAC according to mechanisms and processes that are believed to be important to the assembly and structure of ecological systems.
 
 Again, we are going to make use of `vegan`.
-Specifically, we are going to use the `radfit()` function to fit the predictions of various species abundance models to the RAC of `site1` in BCI 
+Specifically, we are going to use the `radfit()` function to fit the predictions of various species abundance models to the RAC of `site1` in BCI.
 
 ```{r}
 RACresults <- radfit(site1)
