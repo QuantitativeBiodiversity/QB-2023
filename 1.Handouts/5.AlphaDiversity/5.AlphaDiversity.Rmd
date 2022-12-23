@@ -17,7 +17,7 @@ From there, we will discuss ways to integrate richness and evenness, which will 
 ### A. Retrieve and Set Your Working Directory
 
 ```{r, results = 'hide'}
-rm(list=ls()) 
+rm(list = ls()) 
 getwd() 
 setwd("~/GitHub/QB-2023/1.HandOuts/5.AlphaDiversity")
 ```
@@ -25,13 +25,13 @@ setwd("~/GitHub/QB-2023/1.HandOuts/5.AlphaDiversity")
 ### B. Install Packages
 
 In this exercise, we will use a popular R package called `vegan`, which contains tools commonly used in ecological research, including analyses of $\alpha$-diversity.
-Jari Oksanen has created an excellent tutorial that provides an overview of the `vegan` package: http://cc.oulu.fi/~jarioksa/opetus/metodi/vegantutor.pdf
+Jari Oksanen has created an excellent tutorial that provides an overview of the `vegan` package: https://cran.r-project.org/web/packages/vegan/vignettes/intro-vegan.pdf
 
-Let's install the `vegan` package and its dependencies. 
-If you are running `vegan` for the first time, you will need to install it with the `install.packages` function. 
-Otherwise, we recommend you just use the `require` function to load `vegan` and its dependencies.
+Let us install the `vegan` package and its dependencies. 
+If you are running `vegan` for the first time, you will need to install it with the `install.packages()` function. 
+Otherwise, we recommend you just use the `require()` function to load `vegan` and its dependencies.
 
-```{r, results = 'hide', warning=FALSE, message=FALSE}
+```{r, results = 'hide', warning = FALSE, message = FALSE}
 #install.packages("vegan") 
 require("vegan") 
 ```
@@ -39,12 +39,12 @@ require("vegan")
 ## 2) LOADING DATA
 
 We will start by using the tropical forest site-by-species matrix from Barro-Colorado Island (BCI).
-BCI is a 1,560-hectare island in the center of the Panama Canal that is administered by the Smithsonian Tropical Research Institution (http://www.stri.si.edu/english/research/facilities/terrestrial/barro_colorado/). 
+BCI is a 1,560-hectare island in the center of the Panama Canal that is administered by the Smithsonian Tropical Research Institution. 
 Conveniently, the `vegan` package contains a version of the BCI dataset. 
 The BCI dataset is a census of all trees of at least 10 cm in diameter at breast height (DBH) that occur in 50 one-hectare plots.
-More information on the BCI dataset can be found elsewhere (http://ctfs.arnarb.harvard.edu/webatlas/datasets/bci/).
+More information on the BCI dataset can be found elsewhere (http://ctfs.si.edu/webatlas/datasets/bci/).
 You can also learn more about the BCI dataset associated with the `vegan` package by typing `help(BCI)` in the command line.
-Let's load the BCI data using the `data` function:
+Let us load the BCI data using the `data()` function:
 
 ```{r}
 data(BCI)
@@ -66,9 +66,9 @@ The simplest way to calculate species richness is to just add up the number of s
 It is important to note that, in most site-by-species matrices, not every species will be present at each site.
 Consequently, we cannot simply count the columns of the site-by-species matrix to obtain the value of observed richness.
 
-Let's write a function that calculates observed species richness of a site.
+Let us write a function that calculates observed species richness of a site.
 **Functions** are central to the use of R and other computing software and, in short, are pieces of code that operate on one or more variables or objects (e.g., scalars, lists, matrices, etc.) and then return an answer.
-In fact, you've already used several native R functions, e.g., `dim(BCI)`.
+In fact, you have already used several native R functions, e.g., `dim(BCI)`.
 
 ```{r}
 S.obs <- function(x = ""){
@@ -87,7 +87,7 @@ One index that provides an estimate of how well a site is sampled is **Good's Co
 Examining the equation for Good's Coverage reveals that the fraction is simply the portion of *N* represented by singleton species.
 Subtracting this from 1 give the portion of *N* belonging to species sampled more than once.
 
-Let's write a function for Good's Coverage:
+Let us write a function for Good's Coverage:
 
 ```{r}
 C <- function(x = ""){
@@ -100,7 +100,7 @@ C <- function(x = ""){
 There are very few systems on Earth that have been better surveyed than the trees at BCI.
 For most ecological systems, sample size is much smaller than *N* and many taxa can easily go undetected.
 Consequently, while observed richness can be easily calculated, true richness must be estimated.
-To address the case of estimating richness, we are going to introduce a dataset derived from 16S rRNA gene sequences for bacteria, which were collected from the Kellogg Biological Station Long-Term Ecological Site (http://lter.kbs.msu.edu/).
+To address the case of estimating richness, we are going to introduce a dataset derived from 16S rRNA gene sequences for bacteria, which were collected from the Kellogg Biological Station Long-Term Ecological Research (LTER) Site (http://lter.kbs.msu.edu/).
 
 Because it is sometimes hard to apply the species concept to bacteria, sequences are often binned into **operational taxonomic units (OTU)** based on the percent of their gene sequence similarity.
 In this case, 16S rRNA sequences that were within 97% similarity of each other are said to belong to the same OTU; a common convention.
@@ -123,7 +123,7 @@ Both estimators fall into the category of being non-parametric, which means that
 Chao1 is calculated using observed richness (`S.obs`), the observed number of **singletons** (species with an observed abundance of 1), and the observed number of **doubletons** (species with observed abundance of 2).
 Because it requires singleton and doubleton data to calculate, Chao1 cannot be used on a site-by-species matrix where abundances have been relativized, i.e., where the abundance of each species is divided by the row sum.
 
-Let's write a function for Chao1:
+Let us write a function for Chao1:
 
 ```{r}
 S.chao1 <- function(x = ""){
@@ -131,13 +131,13 @@ S.chao1 <- function(x = ""){
   }
 ```
 
-It is important to note that it is not always necessary to write new functions from scratch. Often a diversity metric builds off of a simpler diversity metric, allowing for us to save some time by re-using our existing code. We can see that in the S.chao1 function, where we call on the S.obs() function to estimate the number of species in the site. From there, we write some new code by using sum(x == y) to calculate the number of species in site `x` with abundance `y`, raising the number of singletons to the second power, and dividing the squared singleton count by twice the number of doubletons in the sample.
+It is important to note that it is not always necessary to write new functions from scratch. Often a diversity metric builds off of a simpler diversity metric, allowing for us to save some time by re-using our existing code. We can see that in the `S.chao1` function, where we call on the `S.obs()` function to estimate the number of species in the site. From there, we write some new code by using `sum(x == y)` to calculate the number of species in site `x` with abundance `y`, raising the number of singletons to the second power, and dividing the squared singleton count by twice the number of doubletons in the sample.
 
 **Chao2** is an ***incidence-based estimator*** that uses presence-absence data for examining richness across multiple sites.
 Chao2 is calculated using observed richness (`S.obs`).
-However, in Chao2, **singletons** and **doubletons** refer to species observed once and twice, respectively, among sites or samples.
+However, in Chao2, **singletons** and **doubletons** refer to species observed once and twice, respectively, among other sites or samples that have been obtained.
 
-Let's write a function for Chao2.
+Let us write a function for Chao2.
 In this function, the first argument is site, supplied either as row number or row title (e.g., 1 or "T1_1") and the second argument is the name of the site-by-species matrix (e.g., soilbac):
 
 ```{r}
@@ -152,7 +152,7 @@ S.chao2 <- function(site = "", SbyS = ""){
   }
 ```
 
-Notice that this function is a bit more complicated than previous functions we have written, so we will take some time to deconstruct it. We can see that the function `S.chao2` takes two arguments: the site of interest and the site-by-species matrix. The function first converts the site-by-species matrix into a data frame. From there we select the site of interest and count the number of singletons and doubletons among all sites. The code to calculate Chao2 (`S.obs(x) + (Q1^2)/(2 * Q2)`) should look very familiar. In fact, it is nearly identical to the S.chao1 operator, the only difference being that we are dealing with singletons and doubletons across *all* sites rather than within a single site. 
+Notice that this function is a bit more complicated than previous functions we have written, so we will take some time to break it down. We can see that the function `S.chao2` takes two arguments: the site of interest and the site-by-species matrix. The function first converts the site-by-species matrix into a data frame. From there we select the site of interest and count the number of singletons and doubletons among all sites. The code to calculate Chao2 (`S.obs(x) + (Q1^2)/(2 * Q2)`) should look familiar. In fact, it is nearly identical to the `S.chao1` function, the only difference being that we are dealing with singletons and doubletons across *all* sites rather than within a single site. 
 
 In Chapter 5, pages 56 and 57, of "Biological Diversity: frontier in measurement and assessment" you will see that Chao1 and Chao2 are mathematically very similar, and mainly differ in whether we are considering the abundance of species at one site (Chao1) or the presence of species across multiple sites (Chao2).
 
@@ -191,10 +191,10 @@ However, these conditions are rarely met in ecological studies.
 Because sites with greater abundance generally have greater species richness, differences in richness may largely be due to differences in sample size, i.e., *N*.
 
 A common way to reduce the bias associated with different *N* is to **rarify** samples down to a "lowest common denominator", an approach known as rarefaction.
-For example, if there are 2 sites, one with *N* = 100 and one with *N* = 50, we could randomly sample (without replacement) 50 individuals from the site with greater *N*.
+For example, if there are two sites, one with *N* = 100 and one with *N* = 50, we could randomly sample (without replacement) 50 individuals from the site with greater *N*.
 Generating many random samples (each of 50 individuals and without replacement) from the larger site will allow us to calculate the mean and standard error of expected *S*.
 From here we will be able to tell whether the *S* of the smaller sample falls within the confidence-intervals for expected *S* of the larger sample and hence, whether the difference in *S* between the two sites is simply due to a difference in *N*.
-While this demonstrates how rarefaction works in concept, the expected richness in a sample rarefied from *N* to *n* individuals is solved mathematically (see Hurlbert, 1971; Vegan tutorial).
+While this demonstrates how rarefaction works in concept, the expected richness in a sample rarefied from *N* to *n* individuals is solved mathematically (see Hurlbert, 1971; vegan tutorial).
 
 In the following section, we will calculate observed richness for soil bacteria collected from 11 of the KBS sites, where T1 = agriculture, T7 = grassland, DF = deciduous forest, and CF = coniferous forest.
 Then, we will identify the sample with the fewest sequences (i.e., *N*) and use `vegan` to rarefy to that sampling effort. 
@@ -209,7 +209,7 @@ abline(0, 1, col = 'red')
 text(1500, 1500, "1:1", pos = 2, col = 'red')
 ```
 
-Having now explored the estimation of richness by writing R code, we note that `estimateR` is a function in the `vegan` package that will return observed richness, along with Chao1, ACE, and their associated confidence intervals for a given dataset. 
+Having now explored the estimation of richness by writing R code, we note that `estimateR()` is a function in the `vegan` package that will return observed richness, along with Chao1, ACE, and their associated confidence intervals for a given dataset. 
 You can look more into the code in R packages using commands like this: vegan:::estimateR.default.
 
 
@@ -222,7 +222,7 @@ Many important biodiversity issues such as species coexistence, community stabil
 One of the most common ways to visualize evenness is with a **rank-abundance curve**, which is sometimes referred to as a rank-abundance distribution (RAD).
 A RAC can be constructed by ranking species from the most-to-least abundant.
 
-Let's write a function to construct an RAC.
+Let us write a function to construct an RAC.
 First, we will remove species that have an abundance of zero.
 Then, we will order the vector from greatest (most abundant) to least (least abundant).
 
@@ -235,7 +235,7 @@ RAC <- function(x = ""){
   }
 ```
 
-Now, let's examine the RAC for `site1` of the BCI data set.
+Now, let us examine the RAC for `site1` of the BCI data set.
 We will do this by creating a sequence of ranks and plotting the RAC with natural-log-transformed abundances.
 
 ```{r eval=FALSE, include=FALSE}
@@ -265,7 +265,7 @@ Now that we have visualized species evenness, it is time to quantify it.
 Based on decades of work, researchers have identified desirable features of an evenness metric. 
 One of these is that the values generated by an evenness metric should be relatively easy to intuit. 
 For this reason, useful metrics are often bound between a minimum evenness of 0 and a maximum evenness of 1.
-Another important feature is that evenness values should be independent of richness *S*. That is, we don't want evenness to simply be a reflection of *S*. 
+Another important feature is that evenness values should be independent of richness *S*. That is, we do not want evenness to simply be a reflection of *S*. 
 Here, we will introduce two metrics of evenness that meet the above criteria: Simpson's evenness ($E_{1/D}$) and Smith and Wilson's evenness index ($E_{var}$).
 
 ### B. Simpson's Evenness ($E_{1/D}$)
@@ -286,7 +286,7 @@ SimpE <- function(x = ""){
   }
 ```
 
-Now, let's calculate Simpson's evenness for `site 1` in the BCI site-by-species matrix.
+Now, let us calculate Simpson's evenness for `site 1` in the BCI site-by-species matrix.
 
 ```{r, results ='hide'}
 site1 <- BCI[1, ]
@@ -296,7 +296,7 @@ SimpE(site1)
 We can see that Simpson's evenness for `site1` is moderately even (~`r round(SimpE(site1), 2)`). 
 However, Simpson's evenness has been criticized for being biased by the most abundant species.
 That is, the value of the metric is reportedly sensitive to differences in the few most abundant species.
-Let's examine the value of evenness for `site1` using a slightly more involved metric that is less biased by abundant species.
+Let us examine the value of evenness for `site1` using a slightly more involved metric that is less biased by abundant species.
 
 ### C. Smith and Wilson's Evenness Index ($E_{var}$)
 
@@ -314,11 +314,11 @@ A function for $E_{var}$ can be written as follows:
 ```{r}
 Evar <- function(x){
   x <- as.vector(x[x > 0])
-  1 - (2/pi)*atan(var(log(x)))
+  1 - (2/pi) * atan(var(log(x)))
   }
 ```
 
-Now let's use the $E_{var}$ function to estimate evenness for `site1` of the BCI site-by-species matrix.
+Now let us use the $E_{var}$ function to estimate evenness for `site1` of the BCI site-by-species matrix.
 
 ```{r}
 Evar(site1)
@@ -335,7 +335,7 @@ We will write our own diversity functions and compare them against the functions
 Shannon's diversity metric is derived from Shannon's information entropy, and is essentially a measure of uncertainty. 
 This metric is used across the natural sciences and is calculated as ${H' = -}  \sum p_i ln(p_i)$ where $p_i$ is the proportion of individuals found in the *i*th species.
 A greater value of Shannon's diversity implies a greater chance that the next sampled individual will belong to a different species.
-Let's calculate Shannon's diversity for the RAC of `site1` in the BCI site-by-species matrix and then compare it to the `vegan` estimate:
+Let us calculate Shannon's diversity for the RAC of `site1` in the BCI site-by-species matrix and then compare it to the `vegan` estimate:
 
 ```{r}
 ShanH <- function(x = ""){
@@ -371,7 +371,7 @@ diversity(site1, index = "shannon")
 ### B. Simpson's Diversity (or Dominance)
 Simpson's diversity is a straightforward metric and is calculated as ${D = } \sum p_i^2$ where again, $p_i$ is the proportion of individuals found in the *i*th species. 
 Simpson's index is commonly expressed as 1/*D* so that index values naturally increase with diversity.
-Let's calculate Simpson's diversity for `site1` and then compare it to the `vegan` estimate:
+Let us calculate Simpson's diversity for `site1` and then compare it to the `vegan` estimate:
 
 ```{r}
 SimpD <- function(x = ""){
@@ -384,7 +384,7 @@ SimpD <- function(x = ""){
 }
 ```
 
-And now let's express Simpson's diversity as 1/*D* (`D.inv`) and 1-*D* (`D.sub`):
+And now let us express Simpson's diversity as 1/*D* (`D.inv`) and 1-*D* (`D.sub`):
 
 ```{r, results='hide'}
 D.inv <- 1/SimpD(site1)
@@ -401,11 +401,11 @@ diversity(site1, "simp")
 ### C. Fisher's $\boldsymbol\alpha$
 R.A. Fisher (1943) derived one of the first and most successful models for the RAC, i.e., the log-series distribution.
 This model has only a single fitted parameter, i.e., $\alpha$.
-Because $\alpha$ is a fitted parameter and is estimated from data using an involved numerical approach, it is less straightforward to estimate and we will not attempt to code a function for it, here.
+Because $\alpha$ is a fitted parameter and is estimated from data using an involved numerical approach, it is less straightforward to estimate and we will not attempt to code a function for it here.
 However, Fisher's $\alpha$ has often been used as a diversity metric. 
 According to the authors of the vegan package, Fisher's $\alpha$ is asymptotically similar to inverse Simpson's (1/*D*).
 That is, as the number of species in the RAC and their abundances become large, Fisher's $\alpha$ and 1/*D* become similar.
-Let's do this comparison using the RAC from `site 1` of the BCI site-by-species matrix.
+Let us do this comparison using the RAC from `site 1` of the BCI site-by-species matrix.
 
 ```{r}
 rac <- as.vector(site1[site1 > 0])
@@ -422,10 +422,10 @@ The difference being that an estimate of diversity implicitly or explicitly acco
 
 ## 6) HILL NUMBERS
 
-Richness measurements, even the best asymptotic estimators such as Chao are sensitive to sampling effort, relative abundance, and standardization methods. Traditional diversity indices explicitly include relative abundances, such as the Shannon entropy and Simpson index. Although they are more robust to the uncertainty, these indices have different units and do not scale intuitively with species gain or loss. Hill numbers are developed by Hill (1973) and reintroduced to ecology by Jost (2006). This metric is only one equation and so a way to estimate generalized mean species rarity. We can define the generalized equation of hill diversity as:
+Richness measurements, even the best asymptotic estimators such as Chao are sensitive to sampling effort, relative abundance, and standardization methods. Traditional diversity indices explicitly include relative abundances, such as the Shannon entropy and Simpson index. Although they are more robust to uncertainty, these indices have different units and do not scale intuitively with the gain or loss of species in a site. First developed by Hill (1973), and reintroduced by Jost (2006) Hill numbers represent a way to use a single equation to represent different aspects of diversity relating to rarity. The generalized Hill equation is:
 
 $$\displaystyle H_q=\frac{1}{1-q}log\sum_{n=1}^{S}p_i^q$$
-Where the q exponent is the order in which the index is dependent of rare species. Hill numbers will be then $N_q=exp(Hq)$. Here are the commonly used exponents and and their relationship with traditional indices:
+Where the *q* exponent is the order in which the index is dependent on rare species. Hill numbers will then be $N_q=exp(Hq)$. Here are the commonly used exponents and and their relationship with traditional indices:
 
 | Hill Diversity | Equivalent index | Derivation | Simplification | Meaning |
 |--|--|---|---|---|
@@ -433,12 +433,12 @@ Where the q exponent is the order in which the index is dependent of rare specie
 | Hill- Shannon | Exponential  Shannon  entropy | $H_1=\sum_{i=1}^{S}{p_i}{logp_1}$ | $N_1=exp(H_1)$ | $q=1$ is the geometric mean rarity |
 | Hill- Simpson | Inverse Simpson index | $H_2=-log\sum_{i=1}^{S}{p_i}^{2}$ | $N_2=1/\sum_{i=1}^{S}{p_i}^{2}$ | $q=2$ is the harmonic mean rarity |      |         |
 
-Coverage is the fairest available theoretical method that describes how well a sample captures the true diversity of the whole community, considering that diverse communities need more sampling effort than others. Standardization by coverage might be better than traditional rarefaction, yet both are lacking confidence intervals and are sensitive to sample completeness. Extrapolation extends the pattern of species detection to greater sample size, effort, or coverage than the estimations based on the available data. Although still not fully established, the newest methods combine diversity measures and sample coverage to estimate uncertainty around alpha diversity. Here we will use iNEXT package to graphically explore Hill diversity incorporating sample coverage. It will allow us to extrapolate diversity measures beyond the samples taken. We will be also estimate confidence intervals of these predictions by random sampling. Let's do this comparison using the `site 1` and `site 2` of the BCI site-by-species matrix.
+Coverage is the fairest available theoretical method that describes how well a sample captures the true diversity of the whole community, considering that diverse communities require more sampling effort than others. Standardization by coverage might be better than traditional rarefaction, yet both are lacking confidence intervals and are sensitive to sample completeness. Extrapolation extends the pattern of species detection to greater sample size, effort, or coverage than the estimations based on the available data. Although still not fully established, the newest methods combine diversity measures and sample coverage to estimate uncertainty around alpha diversity. Here we will use iNEXT package to graphically explore Hill diversity incorporating sample coverage. It will allow us to extrapolate diversity measures beyond the samples taken. We will be also estimate confidence intervals of these predictions by random sampling. Let's do this comparison using the `site 1` and `site 2` of the BCI site-by-species matrix.
 
 Let's prepare the data and load the package. 
 ```{r}
 #install.packages("iNEXT")
-library(iNEXT)
+require(iNEXT)
 sites <- BCI[1:2,]
 sites_clean <- sites[, colSums(sites != 0) > 0] #remove 0 abundances
 sites_clean_t <- t(sites_clean) #transform the matrix
@@ -447,14 +447,15 @@ sites_clean_t <- t(sites_clean) #transform the matrix
 Now we will estimate and graphically explore Hill numbers. We will extrapolate these estimates beyond the sampling effort. We will also bootstrap the estimates with random sampling to determine the confidence intervals around diversity estimations. 
 
 ```{r}
-out_hill <- iNEXT(t(sites_clean), q=c(0, 1, 2), datatype="abundance", endpoint=1000, nboot = 100)
-ggiNEXT(out_hill, type=1, color.var="Order.q", facet.var = 'Assemblage') 
+out_hill <- iNEXT(t(sites_clean), q = c(0, 1, 2), datatype = "abundance", 
+            endpoint = 1000, nboot = 100)
+ggiNEXT(out_hill, type = 1, color.var = "Order.q", facet.var = 'Assemblage') 
 ```
 
 We can also graphically explore how accurate our diversity estimations based on the sample coverage. 
 
 ```{r}
-ggiNEXT(out_hill, type=3, color.var="Order.q", facet.var = 'Assemblage')
+ggiNEXT(out_hill, type = 3, color.var = "Order.q", facet.var = 'Assemblage')
 ```
 
 
@@ -477,7 +478,7 @@ RACresults <- radfit(site1)
 ```
 
 From the output, you can see that `vegan` fits five models to our rank-abundance curve: *Null*, *Preemption*, *Lognormal*, *Zipf*, and *Mandelbrot*.
-Before explaining what these models represent, let's run through the `vegan` output:
+Before explaining what these models represent, let us run through the `vegan` output:
 
 1.  Next to "RAD models", we see "family poisson", which tells us that by default, `vegan` assumes Poisson distributed error terms.
 2.  Below this, we see that `vegan` returns the number of species (*S*) and the number of individuals (*N*) for the empirical RAC.
@@ -493,7 +494,7 @@ However, it's not necessarily desirable to have an over-parameterized model.
 So, AIC and BIC assign penalties that correspond with the number of parameters that a model uses. 
 In the end, the "best" model has the lowest AIC or BIC value. 
 
-Now, let's visualize our results by plotting the empirical RAC and the predicted RAC for each model:
+Now, let us visualize our results by plotting the empirical RAC and the predicted RAC for each model:
 
 ```{r}
 plot.new()
