@@ -238,7 +238,7 @@ RAC <- function(x = ""){
 Now, let us examine the RAC for `site1` of the BCI data set.
 We will do this by creating a sequence of ranks and plotting the RAC with natural-log-transformed abundances.
 
-```{r eval=FALSE, include=FALSE}
+```{r eval = FALSE, include = FALSE}
 plot.new()
 site1 <- BCI[1, ]
 
@@ -422,6 +422,11 @@ The difference being that an estimate of diversity implicitly or explicitly acco
 
 ## 6) HILL NUMBERS
 
+<!-- Comments on first paragraph below. -->
+<!-- "Richness measurements"...is this the primary motivation? When I read about Hill numbers it seems to mention nonlinearities in diversity metrics more broadly.  -->
+<!-- Is there a better way to introduce and justify? Will students intuitively understand? -->
+
+
 Richness measurements, even the best asymptotic estimators such as Chao are sensitive to sampling effort, relative abundance, and standardization methods. Traditional diversity indices explicitly include relative abundances, such as the Shannon entropy and Simpson index. Although they are more robust to uncertainty, these indices have different units and do not scale intuitively with the gain or loss of species in a site. First developed by Hill (1973), and reintroduced by Jost (2006) Hill numbers represent a way to use a single equation to represent different aspects of diversity relating to rarity. The generalized Hill equation is:
 
 $$\displaystyle H_q=\frac{1}{1-q}log\sum_{n=1}^{S}p_i^q$$
@@ -433,18 +438,30 @@ Where the *q* exponent is the order in which the index is dependent on rare spec
 | Hill- Shannon | Exponential  Shannon  entropy | $H_1=\sum_{i=1}^{S}{p_i}{logp_1}$ | $N_1=exp(H_1)$ | $q=1$ is the geometric mean rarity |
 | Hill- Simpson | Inverse Simpson index | $H_2=-log\sum_{i=1}^{S}{p_i}^{2}$ | $N_2=1/\sum_{i=1}^{S}{p_i}^{2}$ | $q=2$ is the harmonic mean rarity |      |         |
 
-Coverage is the fairest available theoretical method that describes how well a sample captures the true diversity of the whole community, considering that diverse communities require more sampling effort than others. Standardization by coverage might be better than traditional rarefaction, yet both are lacking confidence intervals and are sensitive to sample completeness. Extrapolation extends the pattern of species detection to greater sample size, effort, or coverage than the estimations based on the available data. Although still not fully established, the newest methods combine diversity measures and sample coverage to estimate uncertainty around alpha diversity. Here we will use iNEXT package to graphically explore Hill diversity incorporating sample coverage. It will allow us to extrapolate diversity measures beyond the samples taken. We will be also estimate confidence intervals of these predictions by random sampling. Let's do this comparison using the `site 1` and `site 2` of the BCI site-by-species matrix.
+<!-- Some thoughts on paragraph below. -->
+<!-- I don't understand the focus on "coverage"  -->
+<!-- Also, the topic sentence is sort of vague "fairest"?  -->
+<!-- Is coverage really a "theoretical method"? -->
+<!-- Doesn't rarefaction have confidence intervals? We created them above I think? -->
+<!-- "Although not fully established" I don't understand purpose of this -->
+<!-- What newest methods are we referring to? -->
+<!-- Why would we want to "extrapolate diversity measures beyond the samples taken" -->
+<!-- I'm assuming it's a way to assess whether our sampling is sufficient to make reliable estimates of diversity? -->
+<!-- I think a more important thing would be for students to understand what different Hill numbers mean on a sample?  -->
+<!-- Do they tell us similar stories? -->
 
-Let's prepare the data and load the package. 
+Coverage is the fairest available theoretical method that describes how well a sample captures the true diversity of the whole community, considering that diverse communities require more sampling effort than others. Standardization by coverage might be better than traditional rarefaction, yet both are lacking confidence intervals and are sensitive to sample completeness. Extrapolation extends the pattern of species detection to greater sample size, effort, or coverage than the estimations based on the available data. Although still not fully established, the newest methods combine diversity measures and sample coverage to estimate uncertainty around alpha diversity. Here we will use iNEXT package to graphically explore Hill diversity incorporating sample coverage. It will allow us to extrapolate diversity measures beyond the samples taken. We will be also estimate confidence intervals of these predictions by random sampling. Let us do this comparison using the `site 1` and `site 2` of the BCI site-by-species matrix.
+
+Let us load the package and prepare the data: 
+
 ```{r}
 #install.packages("iNEXT")
 require(iNEXT)
 sites <- BCI[1:2,]
 sites_clean <- sites[, colSums(sites != 0) > 0] #remove 0 abundances
-sites_clean_t <- t(sites_clean) #transform the matrix
 ```
 
-Now we will estimate and graphically explore Hill numbers. We will extrapolate these estimates beyond the sampling effort. We will also bootstrap the estimates with random sampling to determine the confidence intervals around diversity estimations. 
+Now let us quantify the Hill numbers. We will bootstrap the estimates with random sampling to determine the confidence intervals around diversity estimations. 
 
 ```{r}
 out_hill <- iNEXT(t(sites_clean), q = c(0, 1, 2), datatype = "abundance", 
@@ -452,7 +469,7 @@ out_hill <- iNEXT(t(sites_clean), q = c(0, 1, 2), datatype = "abundance",
 ggiNEXT(out_hill, type = 1, color.var = "Order.q", facet.var = 'Assemblage') 
 ```
 
-We can also graphically explore how accurate our diversity estimations based on the sample coverage. 
+We visualize how our diversity estimates are influenced by sample coverage. 
 
 ```{r}
 ggiNEXT(out_hill, type = 3, color.var = "Order.q", facet.var = 'Assemblage')
