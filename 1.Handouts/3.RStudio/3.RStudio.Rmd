@@ -366,7 +366,7 @@ This will tell us whether or not there are differences (alpha = 0.05) among pair
 TukeyHSD(fitanova)
 ```
 
-Just like the regression analysis above, it is good to look at the residuals:
+Just like the regression analysis above, it is good to look at the residuals: 
 
 ```{r, fig.align='center'}
 par(mfrow = c(2, 2), mar = c(5.1, 4.1, 4.1, 2.1))
