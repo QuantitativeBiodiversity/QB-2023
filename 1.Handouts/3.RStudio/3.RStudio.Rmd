@@ -19,12 +19,12 @@ After learning how to work with these data types, you will learn about contribut
 A good first step when you sit down to work in R is to clear your working directory of any variables from your workspace:
 
 ```{r, results = 'hide'}
-rm(list=ls()) 
+rm(list = ls()) 
 ```
 
 Now we want to set the working directory. 
 This is where your R script and output will be saved. 
-It's also a logical place to put data files that you plan to import into R. 
+It is also a logical place to put data files that you plan to import into R. 
 The following command will return your current working directory:
 
 ```{r, results = 'hide'}
@@ -34,7 +34,7 @@ getwd()
 Use the following command to change your directory (but note that you will need to modify to reflect _your_ actual directory):
 
 ```{r}
-setwd("~/GitHub/QB-2021/1.HandOuts/3.RStudio")
+setwd("~/GitHub/QB-2023/1.HandOuts/3.RStudio")
 ```
 
 ## 2) WORKING WITH MATRICES
@@ -48,7 +48,7 @@ Therefore, much of what we discussed in Week 0 about vectors translates directly
 There are three common ways to create a matrix in R. 
 
 **Approach 1** is to combine (or **concatenate**) two or more vectors. 
-Let's start by creating a one-dimensional vector using a new function `rnorm`.
+Let us start by creating a one-dimensional vector using a new function `rnorm()`.
 
 ```{r}
 j <- c(rnorm(100, mean = 50, sd = 25)) 
@@ -65,14 +65,14 @@ Now we will use the function `cbind` to create a matrix from the two one-dimensi
 k <- cbind(z, j) 
 ```
 
-Use the `help` function to learn about `cbind`.
-Use the `dim` function to describe the matrix you just created. 
+Use the `help()` function to learn about `cbind()`.
+Use the `dim()` function to describe the matrix you just created. 
 
 ```{r, results = 'hide'}
 dim(k) 
 ```
 
-**Approach 2** to making a matrix is to use the `matrix` function along with arguments that specify the number of rows (`nrow`) and columns (`ncol`):
+**Approach 2** to making a matrix is to use the `matrix()` function along with arguments that specify the number of rows (`nrow`) and columns (`ncol`):
 
 ```{r}
 l <- matrix(c(2, 4, 3, 1, 5, 7), nrow = 3, ncol = 2, byrow = FALSE) 
@@ -84,12 +84,12 @@ l <- matrix(c(2, 4, 3, 1, 5, 7), nrow = 3, ncol = 2, byrow = FALSE)
 m <- as.matrix(read.table("data/matrix.txt", sep = "\t", header = FALSE))
 ```
 
-In this case, we're reading in a tab-delimited file. 
+In this case, we are reading in a tab-delimited file. 
 The name of your file must be in quotes, and you need to specify that it is a tab-delimited file type using the `sep` argument. 
 The `header` argument tells R whether or not the names of the variables are contained in the first line; in the current example, they are not. 
 
 Often, when handling and manipulating datasets, we want to be able to **transpose** a matrix. 
-This is an easy operation in R that uses the `t` function:
+This is an easy operation in R that uses the `t()` function:
 
 ```{r}
 n <- t(m)
@@ -115,7 +115,7 @@ n <- m[ ,1:2]
 
 Or perhaps you want non-sequential columns of a matrix. 
 How do we do that? 
-It's easy when you understand how to reference data within a matrix, along with the combine function, `c`:
+It is easy when you understand how to reference data within a matrix, along with the combine function, `c()`:
 
 ```{r}
 n <- m[, c(1:2, 5)]
@@ -127,7 +127,7 @@ n <- m[, c(1:2, 5)]
 
 In the following exercise, we will use a dataset from Lennon et al. (2003) (http://goo.gl/JplHwd), which looked at zooplankton communities along an experimental nutrient gradient in aquatic mesocosms. 
 Inorganic nitrogen and phosphorus were added to 300-L mesocosms for six weeks at three different levels (low, medium, and high), but we also directly measured nutrient concentrations of water samples. 
-So we have **categorical** and **continuous** predictors that we're going to use to help explain variation in zooplankton biomass.  
+So we have **categorical** and **continuous** predictors that we are going to use to help explain variation in zooplankton biomass.  
 
 The first thing we're going to do is load the nutrient data:
 
@@ -135,7 +135,7 @@ The first thing we're going to do is load the nutrient data:
 meso <- read.table("data/zoop_nuts.txt", sep = "\t", header = TRUE)
 ```
 
-Let's use the `str` function to look at the structure of the data. 
+Let us use the `str()` function to look at the structure of the data. 
 
 ```{r}
 str(meso)
@@ -144,7 +144,7 @@ str(meso)
 How does this dataset differ from the `m` dataset above? 
 Remember, **matrices** and **vectors** are only comprised of a _single_ data type.
 In contrast, the `meso` dataset has a combination of numeric and character data; note the `Factor`, `int`, and `num` data types generated from `str` function. 
-So, this means we're dealing with a new type of **data structure**: a **data frame**.
+So, this means we are dealing with a new type of **data structure**: a **data frame**.
 
 Here is a description of the column headers:
 
@@ -167,11 +167,11 @@ Here is a description of the column headers:
 ### B. Correlation
 
 A common step in data exploration is to look at correlations among variables. 
-Before we do this, let's **index** our numerical (continuous) data in the 'meso' data frame. 
-(Correlations typically don't work well on categorical data.)
+Before we do this, let us **index** our numerical (continuous) data in the 'meso' data frame. 
+(Correlations typically do not work well on categorical data.)
 
 ```{r}
-meso.num <- meso[,3:8]
+meso.num <- meso[ ,3:8]
 ```
 
 We can conveniently visualize pairwise **bi-plots** of the data using the following command:
@@ -180,7 +180,7 @@ We can conveniently visualize pairwise **bi-plots** of the data using the follow
 pairs(meso.num)
 ```
 
-Now let's conduct a simple **Pearson's correlation** analysis with the `cor()` function. 
+Now let us conduct a simple **Pearson's correlation** analysis with the `cor()` function. 
 
 ```{r}
 cor1 <- cor(meso.num)
@@ -188,15 +188,15 @@ cor1 <- cor(meso.num)
 
 
 ### C. Loading Contributed Packages
-The base package in R won't always meet all of our wants and needs. 
-This is why there are > 17,000 **contributed packages** that have been developed for R. 
+The base package in R will not always meet all of our wants and needs. 
+This is why there are > 19,000 **contributed packages** that have been developed for R. 
 This may seem overwhelming, but it also means that there are tools (and web support) for just about any problem you might encounter.  
 
 When using one of the contributed packages, the first thing we need to do is **install** them along with their dependencies (i.e., other required packages). 
-We're going to start out by using the _psych_ package <http://cran.r-project.org/web/packages/psych/vignettes/overview.pdf>. 
-The _psych_ package has many features, but we're going to use it specifically for the `corr.test` function.
-This function generates **p-values** for each pairwise correlation. 
-(For whatever reason, the `cor` function in the `base` package of R does not generate p-values.)
+We are going to start out by using the `psych` package <http://cran.r-project.org/web/packages/psych/vignettes/overview.pdf>. 
+The `psych` package has many features, but we are going to use it specifically for the `corr.test()` function.
+This function generates **P-values** for each pairwise correlation. 
+(For whatever reason, the `cor()` function in the `base` package of R does not generate *P*-values.)
 
 You can load an R package and its dependencies using the `require()` function. 
 If a package is not found, i.e., not installed, you will need to install it first and then load dependencies.
@@ -207,7 +207,7 @@ require("psych")
 ```
 
 Note that if a package is already installed, you can bypass the install line by placing a '#' at the beginning of it.
-Now, let's look at the correlations among variables and assess whether they are signficant:
+Now, let us look at the correlations among variables and assess whether they are significant:
 
 ```{r, results = 'hide'}
 cor2 <- corr.test(meso.num, method = "pearson", adjust = "BH")
@@ -218,11 +218,11 @@ _Notes on corr.test_:
 
 a) for rank-based correlations (i.e., non-parametric), use method = "kendall" or "spearman". Give it a try!
 
-b) the adjust = "BH" statement supplies the Benjamini & Hochberg-corrected p-values in the upper right diagonal of the square matrix; the uncorrected p-values are below the diagonal. 
+b) the adjust = "BH" statement supplies the Benjamini & Hochberg-corrected *P*-values in the upper right diagonal of the square matrix; the uncorrected p-values are below the diagonal. 
 This process corrects for **false discovery rate**, which arises when making multiple comparisons.
-In other words, the probability of detecting a "significant" p-value -- just by chance -- increases with the number of tests that are peformed, which is also known as a Type-1 error. 
+In other words, the probability of detecting a "significant" *P*-value -- just by chance -- increases with the number of tests that are performed, which is also known as a Type-1 error. 
 
-Now, let's load another package that will let us visualize the direction and strength of the correlations:
+Now, let us load another package that will let us visualize the direction and strength of the correlations:
 
 ```{r, message=FALSE, fig.align='center', warning=FALSE, results='hide'}
 #install.packages("corrplot", repos="http://cran.rstudio.com/") 
@@ -234,19 +234,19 @@ dev.off()
 ### D. Linear Regression
 It seems that total nitrogen (TN) is a fairly good predictor of zooplankton biomass (ZP) and this is something that we directly manipulated. 
 This gives us license to conduct a linear regression analysis. 
-We can do this in R using the `lm` function:
+We can do this in R using the `lm()` function:
 
 ```{r}
 fitreg <- lm(ZP ~ TN, data = meso)
 ```
 
-Let's examine the output of the regression model:
+Let us examine the output of the regression model:
 
 ```{r, results ='hide'}
 summary(fitreg)
 ```
 
-Now, let's look at a plot of the data used in the regression analysis:
+Now, let us look at a plot of the data used in the regression analysis:
 
 ```{r reglayer1, eval = TRUE, fig.align='center'} 
 plot(meso$TN, meso$ZP, ylim = c(0, 10), xlim = c(500, 5000), 
@@ -264,9 +264,13 @@ text(meso$TN, meso$ZP, meso$NUTS, pos = 3, cex = 0.8)
 There is somewhat of a steep learning curve for plotting in R. 
 However, R is also very flexible and can make beautiful figures. 
 Perhaps one of the biggest initial obstacles is getting familiar with all of the **plotting arguments**.
-The following website provides a nice overview <http://www.statmethods.net/advgraphs/parameters.html> and there are plenty of other websites and books that are useful to have close by. 
+The following website provides a nice overview <http://www.statmethods.net/advgraphs/parameters.html> and there are plenty of other websites and books that are useful to have close by.
+Outside of `base` R, there are packages that aid in plotting.
+One such package is `ggplot2` <https://ggplot2.tidyverse.org/>. 
+It belongs to a group of packages knows as the **Tidyverse** <https://www.tidyverse.org/>, which includes great tools for "wrangling" data. 
+We will learn more about this in QB in future weeks. 
 
-Now, let's continue with our regression analysis. 
+Now, let us continue with our regression analysis. 
 To add the regression line, the first thing we need to do is identify a range of x-values and then generate the corresponding **predicted values** from our regression model:
 
 ```{r reglayer3, echo = -1}
@@ -276,7 +280,7 @@ regline <- predict(fitreg, newdata = data.frame(TN = newTN))
 lines(newTN, regline)
 ```
 
-Now let's create and plot the **95% confidence intervals** using the same procedure as above, that is, use `newTN` to generate corresponding confidence intervals from our regression model:
+Now let us create and plot the **95% confidence intervals** using the same procedure as above, that is, use `newTN` to generate corresponding confidence intervals from our regression model:
 
 ```{r reglayer4, echo = -1}
 <<reglayer3>>
@@ -302,13 +306,16 @@ plot(fitreg)
 
 ### E. Analysis of Variance (ANOVA)
 
-We also have the option of looking at the relationship between zooplankton biomass and nutrients where the manipulation is treated categorically (low, medium, high). First, let's order the categorical nutrient treatments from low to high (R's default is to order alphabetically):
+We also have the option of looking at the relationship between zooplankton biomass and nutrients where the manipulation is treated categorically (low, medium, high). 
+First, let us order the categorical nutrient treatments from low to high (R's default is to order alphabetically):
 
 ```{r}
 NUTS <- factor(meso$NUTS, levels = c('L', 'M', 'H'))
 ```
 
-Before plotting, we need to calculate the means and standard errors for zooplankton biomass in our nutrient treatments. We are going to use an important function called `tapply`. This allows us to apply a function (e.g., mean) to a vector (e.g., ZP) based on information in another column (e.g., nutrient treatment). 
+Before plotting, we need to calculate the means and standard errors for zooplankton biomass in our nutrient treatments. 
+We are going to use an important function called `tapply`. 
+This allows us to apply a function (e.g., mean) to a vector (e.g., ZP) based on information in another column (e.g., nutrient treatment). 
 
 ```{r}
 zp.means <- tapply(meso$ZP, NUTS, mean)
@@ -320,7 +327,7 @@ sem <- function(x){
 zp.sem <- tapply(meso$ZP, NUTS, sem)
 ```
 
-Now let's make the barplot:
+Now let us make the barplot:
 
 ```{r boxlayer1, eval = TRUE, fig.align='center'}
 bp <- barplot(zp.means, ylim =c(0, round(max(meso$ZP), digits = 0)), 
@@ -346,7 +353,7 @@ Last, we can conduct a one-way analysis of variance (ANOVA) as follows:
 fitanova <- aov(ZP ~ NUTS, data = meso)
 ```
 
-Let's look at the output in more detail (just as we did with regression):
+Let us look at the output in more detail (just as we did with regression):
 
 ```{r, results='hide'}
 summary(fitanova)
@@ -359,7 +366,7 @@ This will tell us whether or not there are differences (alpha = 0.05) among pair
 TukeyHSD(fitanova)
 ```
 
-Just like the regression analysis above, it's good to look at the residuals:
+Just like the regression analysis above, it is good to look at the residuals:
 
 ```{r, fig.align='center'}
 par(mfrow = c(2, 2), mar = c(5.1, 4.1, 4.1, 2.1))
@@ -367,11 +374,11 @@ plot(fitanova)
 ```
 
 ## 4) AN INTRODUCTION TO THE SITE-BY-SPECIES MATRIX
-During Quantitative Biodiversity this semester, you will be introduced to a few fundamental data structures that are critical for analyzing biodiversity data. 
+During QB this semester, you will be introduced to a few **primary data structures** that are critical for analyzing biodiversity data. 
 The first of these is the **site-by-species matrix**. 
 This site-by-species matrix contains abundances, relative abundances, or the presence of species (or other taxonomic units) observed at different sampling sites. 
 The site-by-species matrix is also very similar to other types of data that you might encounter if you are working with genomic, metagenomic, transcriptomic, or metabolomic datasets. 
-This means that, even if you don't care about biodiversity *per se*, the tools that you are learning in Quantitative Biodiversity can be used to address questions in other systems!
+This means that, even if you don no care about biodiversity *per se*, the tools that you are learning in QB can be used to address questions in other systems!
 The table below is an example of what a typical site-by-species matrix looks like:
 
 \begin{center}

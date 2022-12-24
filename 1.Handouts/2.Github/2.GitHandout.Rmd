@@ -8,34 +8,23 @@ output:
 header-includes:
 - \usepackage{graphicx}
 - \usepackage{array}
-geometry: margin=2.54cm
+geometry: margin = 2.54cm
 ---
 
 ## OVERVIEW
 
-Eventually, you may choose to set up your personal computer with Git. 
-But to help ensure that things go smoothly, you will have access to a dedicated Mac desktop computer that is located in Lindley Hall, which you can access using a Remote Desktop connection.
-This computer has all the software required for the course.
-You will use Git and GitHub on that computer to access and record changes to QB **worksheets** that contain in-class **exercises** and **assignments** that will eventually be submitted via Github.
-The instructions below will show you how to configure github on a computer. 
+During QB, you will have access to a dedicated Mac desktop computer that is physically located in Fine Arts 004. 
+Installed on this lab computer is all the software required for the course.
+In addition to using this during class period, you can access this lab computer using a Remote Desktop connection (see bullet 9 below)
+You will use Git and GitHub on the lab computer to access and record changes to QB **worksheets** that contain in-class **exercises** and **assignments** that will eventually be submitted via Github.
+The following instructions will show you how to configure github on a computer (lab or personal).
 After that, you will learn how to **fork** and **clone** a GitHub repository. 
 Finally, you will learn how to **commit** and **push** changes so that you can access them later on your personal computer using **fetch** and **merge** commands.  
 
 ***
 
-### 1) Remote Desktop
-Owing to the pandemic, we are unlikely to meet face-to-face during our regularly scheduled class time. 
-To avoid any initial complications arising from software incompatibility, at least initially, you will all remotely log into one of the cloned Mac desktop computer in Lindley Hall that has all of the correct versions of software needed for QB.
-Please follow these steps:
-
-1. Visit https://uits.iu.edu/iuanyware and click on "Apps" along the top banner
-2. Select "Remote Desktop Connection" from the list of software
-3. Enter the IP address that was assigned to you in the text box following "Computer" and hit "connect"
-4. Supply your IU username and password
-5. You should now see the desktop of the computer in Lindley Hall
-
-### 2) Git Test
-Before we get started with Git, we first need to test our current installation to make sure there aren't any issues.
+## 1) Git Test
+Before we get started with Git, we first need to test our current installation to make sure there are not any issues.
 The easiest way to do this is to determine what Git version is currently installed.
 We will use **Terminal** 
 
@@ -45,7 +34,7 @@ Second, you can navigate to **Utilities Folder** in Finder.
 You may want to drag Terminal to the **Dock** at the bottom of your screen, as you will frequently be using this program.
 
 1. Find Terminal and open a new window
-2. After you've opened a new Terminal window (Shell > New Window), type the following commands, which will print your current working directory (pwd), list folders in your working directory (ls), and supply the version of installed git.
+2. After you have opened a new Terminal window (Shell > New Window), type the following commands, which will print your current working directory (pwd), list folders in your working directory (ls), and supply the version of installed git.
 
     ```sh
     pwd
@@ -53,7 +42,7 @@ You may want to drag Terminal to the **Dock** at the bottom of your screen, as y
     git --version
     ```
 
-## 3) Git User Configuration
+## 2) Git User Configuration
 1. **Organization:** We recommend that you create a folder in your user directory called '*GitHub*' to make this and future assignments easier to manage. 
 In the following code, you will move to your user directory using the `cd` (change directory) function.
 The *slashdot* (./) specifies your current directory (../ would specify the directory above your current directory) and you will make a new directory with `mkdir` function. 
@@ -82,8 +71,8 @@ Line endings are invisible characters that your operating system places at the e
 On Unix machines (e.g., Mac), this is the linefeed character (LF).
 On Windows machines, this is the carriage-return (CR) and linefeed (LF) characters.
 This difference in line endings between Mac and Windows causes incompatibilities between the two systems.
-However, Git is equipped to handle the differences by silently converting line endings when repos are pushed to remote servers.
-We *strongly* urge that you configure this behavior in order to prevent any future issues when collaborating across computer platforms.
+However, Git is equipped to handle the differences by silently converting line endings when repositories are pushed to remote servers.
+We *strongly* urge that you configure this behavior in order to prevent any future issues (i.e., conflicts) when collaborating across computer platforms.
 
     **On Mac**
 
@@ -99,7 +88,7 @@ We *strongly* urge that you configure this behavior in order to prevent any futu
     
 **You are now ready to** ***Git !!!***
 
-## 4) Create User
+## 3) Create User
 1. Navigate to https://github.com
 2. Sign in with your Username and Passphrase
 3. On the top right of your screen, click on your Username
@@ -107,7 +96,7 @@ We *strongly* urge that you configure this behavior in order to prevent any futu
 
     \includegraphics[height=0.75cm]{images/github_edit_btn.png}
 
-## 5) Fork and Clone a Repo
+## 4) Fork and Clone a Repo
 1. Navigate to the QB student organization: https://github.com/QBstudents
 2. Click on the repository (repo) with your name
 3. Fork your repo by clicking on the Fork icon in the top right of your screen<br>
@@ -117,7 +106,7 @@ We *strongly* urge that you configure this behavior in order to prevent any futu
     You should now see the repo on your GitHub page.
 
 4. Clone the repo onto your local machine using the command line (Terminal).
-Replace "username" with your GitHub username and "repo" with the name of the repo in the QBstudent organization (e.g., QB2021_Fishman)
+Replace "username" with your GitHub username and "repo" with the name of the repo in the QBstudent organization (e.g., QB2023_Smith)
 
     ```sh
     cd ~/GitHub
@@ -152,7 +141,7 @@ The following commands will set the location of your **upstream remote repositor
     Hint: View the Markdown guide to learn about formatting and making ordered lists <https://guides.github.com/features/mastering-markdown/>. 
     When you are done, save the close the document.
 
-## 6) Commit and Push
+## 5) Commit and Push
 1. You just changed the README.md file. 
 To record this, we are going to create a **commit** or "revision" with the following code. 
 The `status` function identifies changes you made, the `add` command adds a file to the "staging area", and the `commit` command sends the changes to your repository along with a message (-m).
@@ -176,7 +165,7 @@ We check for these changes using the git commands **fetch** and **merge** as fol
 
 You should now see the repo, including your recent changes, on your GitHub webpage.
 
-## 7) Pull Request
+## 6) Pull Request
 After pushing your commit, you need to follow up by making a **Pull Request**.
 
 1. Navigate to your GitHub webpage to make sure that the file (e.g., README.md) was uploaded correctly. 
@@ -186,7 +175,7 @@ If so, submit a pull request to submit your file to the course instructors. <br>
   
     The course instructors can now merge and see your changes.
     
-## 8) Getting Up to Date   
+## 7) Getting Up to Date   
 2. To get new worksheets, you will *pull* your upstream repository to your local computer using the **fetch** and **merge**. 
 This will allow any updates your instructors have made to be merged with your local documents.
 In addition to pulling your upstream repo, you always want to push any updates to your origin.
@@ -202,7 +191,7 @@ In addition to pulling your upstream repo, you always want to push any updates t
 During this course, you will receive **worksheets** and submit all **assignments** using these methods.
 In addition, you will use Git and GitHub to contribute to assignments in class and on your personal computers.
 
-## 9) Basic Git and GitHub glossary:
+## 8) Basic Git and GitHub glossary:
 The terms below will be used throughout this class.
 Some are commands that you will type into the terminal window. 
 All are defined with respect to how we will be using Git and GitHub in this class.
@@ -253,3 +242,15 @@ All are defined with respect to how we will be using Git and GitHub in this clas
   \hline
   \end{tabular}
   \end{center}
+
+## 9) Remote Desktop
+
+Ultimately, we hope that you will set up Git on your personal computer. 
+But if you ever encounter any complications arising from software incompatibility, you have the ability to remotely log into one of the cloned Mac desktop computer in 004 Fine Arts that has all of the correct versions of software needed for QB.
+Please follow these steps:
+
+1. Visit https://storefront.iuanyware.iu.edu/Citrix/IUAnyWareCASWeb/ and click on "Apps" along the top banner
+2. Select "Remote Desktop Connection" from the list of software
+3. Enter the IP address that was assigned to you in the text box following "Computer" and hit "connect"
+4. Supply your IU username and password
+5. You should now see the desktop of the computer in 004 Fine Arts

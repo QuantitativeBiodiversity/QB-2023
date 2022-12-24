@@ -31,8 +31,8 @@ Do you fear that data on a hard drive could get lost or damaged?
 Do you have a file somewhere that looks like this: "Dissertation-Project-StatsCode-Final-v23.R"?
 No need to worry.
 Version control can help you better manage changes to data, manuscripts, and computer code.
-Through this, you can become a more organized and responsible scientist.
-If that isn't enough, funding agencies and many journals now require authors to provide curated data and can call on authors to provide proof of reproducibility.
+Through this, you will become a more organized and responsible scientist.
+If that is not enough, funding agencies and many journals now require authors to provide curated data and can call on authors to provide proof of reproducibility.
 
 ### How version control works, in a nutshell
 
@@ -42,17 +42,17 @@ Instead, the user makes changes to a local version of the project (e.g., on your
 The entire history of the online version is tracked and protected.
 When the online version is modified by a collaborator, then the user merely **pulls** in those changes to their local version.
 All this pushing, pulling, and deciding how different versions from different computers get merged together is done by version control software.
-In this class, we will use the most popular and powerful version-control software available, that is, Git.
+In QB, we will use the most popular and powerful version-control software available, that is, **Git**.
 
 ### Using Git and GitHub for version control
 
-**Git** is a free and open-source version-control system designed to handle projects of all sizes with speed and efficiency. 
+Git is a free and open-source version-control system designed to handle projects of all sizes with speed and efficiency. 
 Users install Git onto their local machines (e.g., laptop) but unlike some software you might be familiar with, such as internet browsers, Git *per se* does not have a graphical interface.
 Therefore, we will work with Git using the **shell**, which is a command-line way to access your computer's operating system's services.
 
 **GitHub** is a web-based service for hosting projects that use the Git version control system.
 GitHub provides an attractive interface for viewing and managing a project's code, data, and text files.
-If your project is visible to others (public), then GitHub also serves as a way to let the world know about the awesome science you're doing and even how to join in and share tools.
+If your project is visible to others (public), then GitHub also serves as a way to let the world know about the science you are doing and even how to join in and share tools.
 While most any technology company, federal agency, research or data center (e.g. CERN, NCBI), or world government (e.g., see <https://government.github.com/>) uses it, GitHub is a great central location to manage any project.  
 
 #### Assignment 1: Create a GitHub account  
@@ -83,8 +83,8 @@ As mentioned above, version control using Git and GitHub will require that you b
 ### Overview
 
 R is a programming language and software environment that can be used for performing statistics, graphics, and modeling. 
-It is one of the most popular tools for conducting computational research in the life sciences, in part because it's free, open source, and has an active group of contributors.
-We are going to harness the power of R using **RStudio** (<http://www.rstudio.com/>), an integrated development environment (IDE), which has some nice features. 
+It is one of the most popular tools for conducting computational research in the life sciences, in part because it is free, open source, and has an active group of contributors.
+We are going to harness the power of R using **RStudio** (<https://posit.co/>), an integrated development environment (IDE), which has some nice features. 
 In addition to being more user friendly than R, RStudio will allow us to interface with other tools. 
 For example, the document you are reading was generated in RMarkdown (<http://rmarkdown.rstudio.com>). 
 **Markdown** is a simple formatting syntax for authoring HTML, PDF, and other documents. 
@@ -92,7 +92,7 @@ We will also use a tool called **knitr** (<http://yihui.name/knitr/>), which is 
 For example, when you click the "Knit PDF" button in the scripting window of RStudio, a document will be generated that includes LaTeX (<http://www.latex-project.org/>) typesetting as well as the output of any embedded R code.
   
 However, if there are errors in the Rcode in your Markdown document, you will not be able to knit a PDF file. 
-All assignments in this class will require that you successfully create a Markdown-generated PDF using knitr; you will then **push** this document to the course **repository** hosted on GitHub (<https://github.com/QBstudents>) and generate a **pull request** for instructors. 
+All assignments in this class require that you successfully create a Markdown-generated PDF using knitr; you will then **push** this document to the course **repository** hosted on GitHub (<https://github.com/QBstudents>) and generate a **pull request** for instructors. 
 
 ### Introduction to RStudio
 
@@ -106,7 +106,7 @@ Once in the APPS tab use the search window in the top right corner to search for
 Finally, to obtain the complete layout of the RStudio integrated development environment (IDE) we will open the script editor from the File menu on the top left corner:
 `File > New File > R script.`
 
-Now, we're going to do some simple exercises to get you familiar with how to use R and RStudio.
+Now, we are going to do some simple exercises to get you familiar with how to use R and RStudio.
 There are many on-line resources (websites, videos, etc.) that can provide additional background and instruction.
 For example, here is a site that provides some information that will compliment some of the basics that we are about to explore: <https://www.sitepoint.com/introduction-r-rstudio/>
 
@@ -115,7 +115,7 @@ For example, here is a site that provides some information that will compliment 
 There are a few different ways to execute (i.e., submit) your code in RStudio. 
 First, the lower left-hand panel of the RStudio window is referred to as the *Console*.
 You can type your code directly at the **command line** in the console and hit enter.
-This is quick and easy, but it's not a great way to conduct reproducible science.
+This is quick and easy, but it is not a great way to conduct reproducible science.
 A second way to execute code is to type it into the **script editor pane** in the upper-left panel of the Rstudio window.
 The code that you write can then be saved in an organized way as an RMarkdown file (*.Rmd file*) when you are finished. 
 You can execute code from the script editor pane by hitting Command+Enter (Mac) or Ctrl+Enter (PC).
@@ -162,7 +162,7 @@ log(100)    # log base e "natural log"
 ### Assigning variables in R
 
 You will often find it useful and necessary to assign values to a **variable**, also known as an **object** in R. 
-Generally speaking, in R, it's best to use `<-` rather than `=` as an assignment operator.
+Generally speaking, in R, it is best to use `<-` rather than `=` as an assignment operator.
 ```{r}
 a <- 10
 b <- a + 20
@@ -170,16 +170,16 @@ b <- a + 20
 
 Check the value of *b* by typing `b` and hitting enter.
 
-Now let's reassign a new value to *a*:
+Now let us reassign a new value to *a*:
 ```{r}
 a <- 200
 ```
 
 What is the value of *b* now? 
-What's going on? 
+What is going on? 
 
 R held onto the original value of *a* that was used when assigning values to *b*. 
-You can correct this using the `rm` function, which removes objects from your R **environment**. 
+You can correct this using the `rm()` function, which removes objects from your R **environment**. 
 ```{r}
 rm("b")
 ```
@@ -189,21 +189,23 @@ What happens if we reassign *b* now?
 b <- a + 20
 ```
 
-Sometimes it's good practice to clear all variables from your R environment, especially if you've been working on multiple projects during the day. 
+Sometimes it is good practice to clear all variables from your R environment, especially if you have been working on multiple projects during the day. 
 This can be done in a couple of ways. 
 For example, you can just click `clear` in the **Environment tab** of the **Workspace and History pane** in the upper-right panel of the R Studio window (broom icon). 
 The same procedure can be performed at the command line of the console or script editor pane.
-To do this, you can use the `ls` function to view a list of all the objects in the R environment:
+To do this, you can use the `ls()` function to view a list of all the objects in the R environment:
 ```{r}
 ls()
 ```
 
-You can now clear all of the stored variables from R's memory using two functions: `rm` and `ls`. 
+You can now clear all of the stored variables from R's memory using two functions: `rm()` and `ls()`. 
 ```{r}
-rm(list=ls())
+rm(list = ls())
 ```
 
-For your convinience you might also want to clear the console. this can be done usin `CTRL` + `L`. This will not erase the history of commands you executed. These can be found in the **History tab** of the **Workspace and History pane**, and can also be accessed from the console by the up and down arrows.
+For your convenience you might also want to clear the console. this can be done usin `CTRL` + `L`. 
+This will not erase the history of commands you executed. 
+These can be found in the **History tab** of the **Workspace and History pane**, and can also be accessed from the console by the up and down arrows.
 
 ### Working with vectors in R
 
@@ -244,7 +246,8 @@ What happens when you multiply two vectors of the same length?
 z <- x * y 
 ```
 
-You may need to reference a specific **element** in a vector. We will do this using the square brackets. 
+You may need to reference a specific **element** in a vector. 
+We will do this using the square brackets. 
 In this case, the number inside of the square brackets tells R that we want to call the *i*th element of vector `z`:
 ```{r}
 z[2]
@@ -261,14 +264,14 @@ z[c(1,2,4,6)]
 ```
 
 In some instances, you may want to change the value of an element in a vector. 
-Here's how you can substitute a new value for the second element of `z`:
+Here is how you can substitute a new value for the second element of `z`:
 ```{r}
 z[2] <- 583 
 ```
 
 ### Summary Statistics of Vectors
 
-It's pretty easy to perform summary statistics on a vector of data using the built-in functions of R:
+It is pretty easy to perform summary statistics on a vector of data using the built-in functions of R:
 ```{r, results = 'hide'}
 max(z)    # maximum
 min(z)    # minimum
@@ -284,7 +287,7 @@ What happens when you take the standard error of the mean (`sem`) of `z`?
 The standard error of the mean is defined as $\frac{sd (x)}{\sqrt{n}}$. 
 This function does not exist in the **base package** of R. 
 Therefore, you need to write your own function, either in the console or the script editor panel
-Let's give it a try:
+Let us give it a try:
 
 ```{r}
 sem <- function(x){
