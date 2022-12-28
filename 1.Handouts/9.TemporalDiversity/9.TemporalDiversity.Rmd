@@ -1,5 +1,5 @@
 ---
-title: '10\. Temporal Diversity'
+title: '9\. Temporal Diversity'
 author: "Z620: Quantitative Biodiversity, Indiana University"
 header-includes:
    - \usepackage{array}
@@ -23,7 +23,7 @@ You will then learn the basics of time series analysis, repeated-measures analys
 ```{r, results = 'hide'}
 rm(list=ls()) 
 getwd() 
-setwd("~/GitHub/QB-2019/1.HandOuts/10.TemporalDiversity")
+setwd("~/GitHub/QB-2023/1.HandOuts/9.TemporalDiversity")
 ```
 
 ### Install Packages

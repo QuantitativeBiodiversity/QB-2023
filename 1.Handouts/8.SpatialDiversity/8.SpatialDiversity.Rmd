@@ -1,5 +1,5 @@
 ---
-title: '9\. Spatial Diversity'
+title: '8\. Spatial Diversity'
 author: "Z620: Quantitative Biodiversity, Indiana University"
 header-includes:
    - \usepackage{array}
@@ -26,7 +26,7 @@ After completing this exercise you will be able to:
 ```{r, results = 'hide'}
 rm(list=ls())
 getwd()
-setwd("~/GitHub/QB-2019/1.HandOuts/9.SpatialDiversity")
+setwd("~/GitHub/QB-2023/1.HandOuts/8.SpatialDiversity")
 ```
 
 ### B. Load Packages 
@@ -84,7 +84,7 @@ Let's generate a map of the refuge ponds using the `GetMap` function in the pack
 This map will be centered on Brown County, Indiana (39.1 latitude, -86.3 longitude).
 Google requires Application Programming Interface (API) authorization, which controls access and authorization. 
 If you are interested in using getting Google maps for your research, you'll need to sign up for an API here: https://developers.google.com/maps/documentation/javascript/get-api-key
-Becasue the API key is linked to a credit card, we are not going to print our 39 character code. 
+Because the API key is linked to a credit card, we are not going to print our 39 character code. 
 However, we comment out the syntax code so you can use this for your own work
 
 ```{r}
