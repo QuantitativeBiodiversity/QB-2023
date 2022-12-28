@@ -2,7 +2,7 @@
 title: '4b\. Software Installation Guide - SSH Keys'
 author: "Z620: Quantitative Biodiversity, Indiana University"
 output: pdf_document
-geometry: margin=2.54cm
+geometry: margin = 2.54cm
 ---
 
 ## OVERVIEW  
