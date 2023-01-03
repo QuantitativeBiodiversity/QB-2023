@@ -228,9 +228,9 @@ Then, we will order the vector from greatest (most abundant) to least (least abu
 
 ```{r}
 RAC <- function(x = ""){
-  x = as.vector(x)
   x.ab = x[x > 0]
   x.ab.ranked = x.ab[order(x.ab, decreasing = TRUE)]
+  as.data.frame(lapply(x.ab.ranked, unlist))
   return(x.ab.ranked)
   }
 ```
@@ -238,7 +238,7 @@ RAC <- function(x = ""){
 Now, let us examine the RAC for `site1` of the BCI data set.
 We will do this by creating a sequence of ranks and plotting the RAC with natural-log-transformed abundances.
 
-```{r eval = FALSE, include = FALSE}
+```{r}
 plot.new()
 site1 <- BCI[1, ]
 
