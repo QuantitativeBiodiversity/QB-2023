@@ -422,36 +422,99 @@ The difference being that an estimate of diversity implicitly or explicitly acco
 
 ## 6) HILL NUMBERS
 
-In the previous section, we demonstrated how information about species richness and the proportion of each species could be combined into a single metric. However, these indices tend to be highly correlated with one another, and are not always expressed in units that allow for comparison. For example Shannon's entropy is in units of bits and Simpson's diversity is in units of probability. One concept that gets around this problem is the **effective number of species** (MacArthur 1965). It refers to the number of equally abundant species needed to obtain the same mean proportional species abundance as observed in a sample. Hill (1973) realized that species richness, Shannon entropy, and Simpson index are all members of the same family of diversity indices that can be mathematically unified through an exponent $q$, which represented the discounting of rare species when calculating diversity. 
+In the previous section, we demonstrated how information about species richness and the proportion of each species could be combined into a single metric. However, these indices tend to be highly correlated with one another, and are not always expressed in units that allow for comparison. For example Shannon's entropy is in units of bits and Simpson's diversity is in units of probability.  One concept that gets around this problem is the **effective number of species** (MacArthur 1965). It refers to the number of equally abundant species needed to obtain the same mean proportional species abundance as observed in a sample. Hill (1973) realized that species richness, Shannon entropy, and Simpson index are all members of the same family of diversity indices that can be mathematically unified through an exponent $q$, which represented the discounting of rare species when calculating diversity.
 
 The generalized Hill equation is:
 
-$$\displaystyle ^qD=\biggl(\sum_{i=1}^{S}p_i^q\biggl)^\frac{1}{1-q}$$
-Where the $q$ exponent is the order in which the index is dependent on rare species. For $q = 0$, 1 and 2 (also noted as $N_0$, $N_1$ and $N_2$): $^0D=S$ (species richness), $^1D=e^H$ (exponential Shannon entropy),  $^2D=1/D$ (reciprocal of Simpson index).
+$$\displaystyle ^qD=\biggl(\sum_{i=1}^{S}p_i^q\biggl)^\frac{1}{(1-q)}$$
+Where the $q$ exponent is the order in which the index is dependent on rare species. For $q = 0$, 1 and 2: $^0D=S$ (species richness), $^1D=e^H$ (exponential Shannon entropy),  $^2D=1/D$ (reciprocal of Simpson index).
 
-Hill number are becoming popular in biodiversity research for a number of reasons. First, they are all expressed in common units: the effective number of species. Second, it is easy to convert other commonly used measured of diversity into Hill numbers. Third, Hill numbers address the **replication principle** also known as the **doubling property**. Consider two completely distinct assemblages where there are no species in common, but there are identical relative abundance distributions. In this case, the Hill number will double when the samples are combined. Fourth, Hill numbers an accommodate taxonomic, phylogenetic, and functional information.
+Hill numbers are becoming popular in biodiversity research for a number of reasons. First, they are all expressed in common units: the effective number of species. Second, it is easy to convert other commonly used measured of diversity into Hill numbers. Third, Hill numbers address the **replication principle** also known as the **doubling property**. Consider two completely distinct assemblages where there are no species in common, but there are identical relative abundance distributions. In this case, the Hill number will double when the samples are combined. Fourth, Hill numbers an accommodate taxonomic, phylogenetic, and functional information.
 
-Here, we will use `iNEXT` package to calculate Hill numbers as a function of sample coverage using `site 1` and `site 2` of the BCI site-by-species matrix.
-
-Let us load the package and prepare the data: 
+Let's demonstrate the importance of Hill numbers for ecologists with one example. Consider a community with S species, all with equal abundances A. For community 1 (C1), S = 500 species, and A = 1 individual of each species. For community 2 (C2), S = first 250 species from C1, and A = 1 individuals of each species. 
 
 ```{r}
-#Uncomment the following line if iNEXT package is not installed on your computer
-#install.packages("iNEXT")
-library(iNEXT)
-sites <- BCI[1:2,]
-sites_clean <- sites[, colSums(sites != 0) > 0] #remove 0 abundances
+# Simulate communities
+C1 <- data.frame(t(rep(1, 500))); colnames(C1) <- paste("sp", 1:500)
+C2 <- data.frame(t(c(rep(1, 250)))); colnames(C2) <- paste("sp", 1:250)
 ```
 
-Now let us graphically explore the Hill numbers. 
-We will bootstrap the estimates with random sampling to determine the confidence intervals around diversity estimations. 
+Since we created these communities, we know that the species richness of C2 is the half of C1. Feel free to test this using `specnumber` function in the package `vegan`. But let us use `diversity`= function to calculate Shannon diversity for both communities, and ask whether diversity of C2 is half that of C1.
 
 ```{r}
-out_hill <- iNEXT(t(sites_clean), q = c(0, 1, 2), datatype = "abundance", 
-            endpoint = 1000, nboot = 100)
-
-ggiNEXT(out_hill, type = 1, color.var = "Order.q", facet.var = 'Assemblage') 
+# Calculate Shannon diversity
+H1 <- diversity(C1, index = "shannon")
+H2 <- diversity(C2, index = "shannon")
+H1; H2
 ```
+
+As you see, it does not meet doubling property. Let's calculate Shannon diversity for each richness level and see what is happening: 
+
+```{r}
+H_all <- matrix(ncol = 2,nrow = 1000)
+for(i in 1:1000) {
+  C <- data.frame(t(rep(1,i)))
+  colnames(C) = paste("sp",1:i)
+  H_all[i,1] <- i
+  H_all[i,2] <- diversity(C, index = "shannon") }
+
+plot(H_all[,1], H_all[,2], xlab = "Species Richness", ylab = "Shannon Diversity (entropy)")
+```
+As you see the relationship between species richness and Shannon diversity is non-linear, so it is open to misinterpretation, especially at high levels of richness. Thus, Jost (e.g., 2006 and 2010) and Chao (e.g., 2014) re-introduced Hill numbers to ecology, which are more intuitive for ecologists to interpret diversity. Let's demonstrate this by converting entropy to effective numbers of species: 
+```{r}
+# Calculate exponential Shannon diversity (equal to the Hill number q=1)
+H1_Hill = exp(diversity(C1,index="shannon"))  
+H2_Hill = exp(diversity(C2,index="shannon"))
+H1_Hill; H2_Hill
+
+# Calculate for each richness level to compare Shannon entropy with Hill number 1 (exponential Shannon diversity)
+H_all_Hill = matrix(ncol = 2,nrow = 1000)
+for(i in 1:1000) {
+  C = data.frame(t(rep(1,i)))
+  colnames(C) = paste("sp", 1:i)
+  H_all_Hill[i,1]=i
+  H_all_Hill[i,2] = exp(diversity(C, index="shannon")) }
+plot(H_all_Hill[,1],H_all_Hill[,2], xlab = "Species Richness",
+ylab = "Exponential Shannon diversity (ENS)")
+```
+Now we linearized the relationship between species richness and diversity. If you repeat this example with Simpson diversity, you will see that it will exacerbate the issue of misinterpretation. One advantege of the generalized Hill equation above is that it allows calculation of diversity along a continuum of values of q. This so called **diversity profile** allows you judge the contributions of rare vs abundant species in a community. Let's write a simple function to explore diversity as a function of the exponent $q$. 
+
+```{r}
+# The following function `profile` calculates the diversity from the equation above along 
+# a continuum of q values
+profile <- function(C) {
+  cbind(seq(0, 7, by = 0.11),
+    unlist(lapply(seq(0, 7, by = 0.11),function(q) sum(apply(C, 1, function(x) 
+       (x/sum(x))^q))^(1/(1-q))))) }
+```
+
+All species have the same abundance in the communities we created. To test this function let's simulate a community with random species abundances. 
+
+```{r}
+set.seed(42)
+C3 <- data.frame(t(sample(1:1000, 500))); colnames(C3) = paste("sp",1:500)
+C3_profile <- profile(C3)
+plot(C3_profile[,1], C3_profile[,2], ylim=c(300,500), pch = 16, cex = 2,
+xlab = "q exponent", ylab = "Diversity (ENS)")
+# q=0, diversity is species richness
+# q=1, diversity is Exponential Shannon diversity
+# q=2, diversity is reciprocal of Simpson diversity
+```
+This plot shows that richness is high, but as we increasingly favor abundant species diversity drops, indicating that our community is composed of some abundant and some rare species. We explored Hill numbers with packages and functions that we know. Today, there are methods which allow combining rarefaction methods and Hill numbers. They also provide extrapolation methods and compute confidence intervals around the diversity estimations. Feel free to discover `iNext` package (Hsieh et al. 2016).
+
+**References**
+
+Chao,  A.  et  al.  2014.  Rarefaction  and  extrapolation  with  Hill  numbers:  a  framework  for sampling  and  estimation  in  species  diversity studies. – Ecol. Monogr. 84: 45–67.
+
+Jost, L. 2006. Entropy and diversity. – Oikos 113: 363–375.
+
+Jost, L. 2010. The relation between evenness and diversity. – Diversity 2: 207–232.
+
+Hill, M. O. 1973. Diversity and evenness: a unifying notation and its consequences. – Ecology 54: 427–432.
+
+Hsieh T. et al. 2016. iNEXT: an R package for rarefaction and extrapolation of species diversity (H ill numbers). Methods Ecol Evol 7: 1451–1456.
+
+MacArthur R. H. 1965. Patterns of Species Diversity. Biological Reviews 40: 510–533.
 
 
 ## 7) MOVING BEYOND UNIVARIATE METRICS OF $\alpha$-DIVERSIY 
