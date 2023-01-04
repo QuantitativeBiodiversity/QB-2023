@@ -67,7 +67,6 @@ Use the space below to generate a rarefaction curve/sample coverage based on the
 
 
 
-
 ```
 
 
@@ -81,13 +80,11 @@ Use the space below to generate a rarefaction curve/sample coverage based on the
 
 
 
-
 ```
 
 **Answer 2 - Plot:** With your analysis, create one (and only one, although it can have multiple panels) *publication-quality* figure. Make sure to annotate your code using # symbols so others (including instructors) understand what you have done and why you have done it. 
 
 ```{r}
-
 
 
 
@@ -106,13 +103,11 @@ Use the space below to generate a rarefaction curve/sample coverage based on the
 
 
 
-
 ```
 
 **Answer 3 - Plot:** 
 
 ```{r}
-
 
 
 
