@@ -463,7 +463,7 @@ plot(H_all[,1], H_all[,2], xlab = "Species Richness", ylab = "Shannon Diversity 
 As you see, the relationship between species richness and Shannon's entropy is non-linear, so it is open to misinterpretation, especially at high levels of richness. Thus, Jost (e.g., 2006 and 2010) and Chao (e.g., 2014) re-introduced Hill numbers to ecology, which are more intuitive for ecologists to interpret diversity. Let's demonstrate this by converting entropy to effective numbers of species: 
 
 ```{r}
-# Calculate exponential Shannon's diversity (equal to the Hill number q = 1)
+# Calculate exponential Shannon's entropy (equal to the Hill number q = 1)
 H1_Hill <- exp(diversity(C1,index = "shannon"))  
 H2_Hill <- exp(diversity(C2,index = "shannon"))
 H1_Hill; H2_Hill
