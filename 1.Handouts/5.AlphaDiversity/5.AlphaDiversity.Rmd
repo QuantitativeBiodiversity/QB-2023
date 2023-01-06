@@ -497,7 +497,7 @@ All species have the same abundance in the communities we created. To test this 
 set.seed(42)
 C3 <- data.frame(t(sample(1:1000, 500))); colnames(C3) = paste("sp",1:500)
 C3_profile <- profile(C3)
-plot(C3_profile[,1], C3_profile[,2], ylim=c(300,500), pch = 16, cex = 2,
+plot(C3_profile[,1], C3_profile[,2], ylim=c(300,500), cex = 2,
 xlab = "q exponent", ylab = "Diversity (ENS)")
 # q=0, diversity is species richness
 # q=1, diversity is Exponential Shannon diversity
