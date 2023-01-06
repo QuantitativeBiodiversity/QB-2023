@@ -520,7 +520,6 @@ Hsieh T. et al. 2016. iNEXT: an R package for rarefaction and extrapolation of s
 
 MacArthur R. H. 1965. Patterns of Species Diversity. – Biological Reviews 40: 510–533.
 
-
 ## 7) MOVING BEYOND UNIVARIATE METRICS OF $\alpha$-DIVERSIY 
 
 The diversity metrics that we just learned about attempt to integrate richness and evenness into a single, univariate metric.
