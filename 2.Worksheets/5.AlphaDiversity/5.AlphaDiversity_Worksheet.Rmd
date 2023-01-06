@@ -376,7 +376,16 @@ In the R code chunk below, please do the following:
 
 > ***Answer 7***:
 
-##6) MOVING BEYOND UNIVARIATE METRICS OF $\alpha$ DIVERSITY
+##6) HILL NUMBERS 
+
+Remember that we have learned about the advantages of Hill Numbers to measure and compare diversity among samples. We also learned to explore the effects of rare species in a community by examining diversity for a series of exponents $q$. 
+
+***Question 8***: Using `site1` of BCI and `vegan` package, a) calculate Hill numbers for $q$ exponent 0, 1 and 2 (richness, exponential Shannon's entropy, and inverse Simpson's diversity). b) Interpret the effect of rare species in your community based on the response of diversity to increasing exponent $q$. 
+
+> ***Answer 8a***:
+> ***Answer 8b***:
+
+##7) MOVING BEYOND UNIVARIATE METRICS OF $\alpha$ DIVERSITY
 
 The diversity metrics that we just learned about attempt to integrate richness and evenness into a single, univariate metric.
 Although useful, information is invariably lost in this process. 
@@ -406,15 +415,15 @@ In the R code chunk below, please do the following:
 ```
 
 
-***Question 8***: Answer the following questions about the rank abundance curves:
+***Question 9***: Answer the following questions about the rank abundance curves:
 a) Based on the output of `radfit()` and plotting above, discuss which model best fits our rank-abundance curve for `site1`?
 b) Can we make any inferences about the forces, processes, and/or mechanisms influencing the structure of our system, e.g., an ecological community?
 
-> ***Answer 8a***:  
-> ***Answer 8b***:
+> ***Answer 9a***:  
+> ***Answer 9b***:
 
 
-***Question 9***: Answer the following questions about the preemption model:
+***Question 10***: Answer the following questions about the preemption model:
 a.  What does the preemption model assume about the relationship between total abundance (*N*) and total resources that can be preempted?
 b.  Why does the niche preemption model look like a straight line in the RAD plot?
 
