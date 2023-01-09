@@ -192,9 +192,7 @@ The following table provides a summary:
   \hline
 \end{tabular}
 \end{center}
-  
-Fortunately, the `dist.dna` function that we used above for generating the neighbor joining tree can easily create distance matrices for a large number of DNA substitution models. 
-Let's create a distance matrix among our bacterial isolates based on the Felsenstein (F84) substitution model using the `dist.dna` function in `ape`. 
+
 
 ### A. Neighbor Joining Trees
 
