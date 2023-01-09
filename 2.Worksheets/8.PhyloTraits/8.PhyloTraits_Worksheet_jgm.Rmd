@@ -1,5 +1,5 @@
 ---
-title: '11\. Worksheet: Phylogenetic Diversity - Traits'
+title: '8\. Worksheet: Phylogenetic Diversity - Traits'
 author: "Student Name; Z620: Quantitative Biodiversity, Indiana University"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
@@ -48,7 +48,7 @@ In the R code chunk below, provide the code to:
 ```{r}
 rm(list = ls())
 getwd()
-setwd("~/GitHub/QB-2023/2.Worksheets/11.PhyloTraits")
+setwd("~/GitHub/QB-2023/2.Worksheets/8.PhyloTraits")
 
 ```
 

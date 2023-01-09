@@ -628,7 +628,7 @@ And from the output of `p.phylosignal` we can see what traits have statistically
 In addition, let us test for phylogenetic signal using Blomberg's K on *niche breadth*:
 
 ```{r}
-# Calcualate Phylogenetic Signal for Niche Breadth
+# Calculate Phylogenetic Signal for Niche Breadth
 signal.nb <- phylosignal(nb, nj.rooted)
 signal.nb
 ```
