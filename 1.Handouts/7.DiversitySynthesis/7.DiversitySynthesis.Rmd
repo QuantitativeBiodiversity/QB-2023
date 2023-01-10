@@ -195,4 +195,4 @@ ggplot(data = com_mat_tidy, aes(x = PC1, y = PC2, color = community))+
   theme_bw()
 ```  
 
-Take note of how each community clusters with one another. 
+Take note of how sites and communities cluster.
