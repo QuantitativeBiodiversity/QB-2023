@@ -1,8 +1,8 @@
 ---
-title: '13\. Team Diversity Projects'
+title: '12\. Team Diversity Projects'
 author: "Z620: Quantitative Biodiversity, Indiana University"
 output: pdf_document
-geometry: margin=2.54cm
+geometry: margin = 2.54cm
 ---
 
 ## OVERVIEW
@@ -26,16 +26,16 @@ There are a few things that you will want to look for in a useful dataset for th
 
 3) We will eventually be integrating phylogenetic information into QB. These datasets may be harder to come by, but they're out there if your group is interested. 
 
-4) If there's an experimental manipulation or underlying question, this will make your project more inspiring and interesting to talk about. 
+4) If there is an experimental manipulation or underlying question, this will make your project more inspiring and interesting to talk about. 
 
 ## INTEGRATION INTO COURSE ASSIGNMENTS
 You will become familiar with your dataset because we will be asking you questions about it from week to week as part of course assignments. 
 
 ## ANALYSES
 Outside of course, you and your partner will can use techniques from QB, but also others to analyze your data to address questions relevant to biodiversity research. 
-You will need visualize the data and test hypotheses when appropriate. You will create an RMarkdown document that contains your data, code, and figures. This will be submitted by **12:00 (noon) on Wednesday, May 5, 2021**
+You will need visualize the data and test hypotheses when appropriate. You will create an RMarkdown document that contains your data, code, and figures. This will be submitted by **12:00 (noon) on Wednesday, March 1, 2023**
 
 ## PRESENTATIONS
-You and your partner will give a joint, 10-15 minute presentation to QB on the last day of class (i.e., May 7) using powerpoint or google slides. 
-The slides for your presentation should be pushed to GitHub by **12:00 (noon) on Thursday, May 5, 2021**
+You and your partner will give a joint, 10-15 minute presentation to QB on the last day of class (i.e., March 3) using powerpoint or google slides. 
+The slides for your presentation should be pushed to GitHub by **12:00 (noon) on Thursday, May 2, 2023**
 
