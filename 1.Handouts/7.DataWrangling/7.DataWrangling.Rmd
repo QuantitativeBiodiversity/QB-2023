@@ -1,5 +1,5 @@
 ---
-title: '7\. Diversity Synthesis'
+title: '7\. Data Wrangling'
 author: 'Z620: Quantitative Biodiversity, Indiana University'
 header-includes:
    - \usepackage{array}

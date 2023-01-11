@@ -1,10 +1,10 @@
 ---
-title: '12\. Phylogenetic Diversity - Communities'
+title: '11\. Phylogenetic Diversity - Communities'
 author: "Z620: Quantitative Biodiversity, Indiana University"
 header-includes:
    - \usepackage{array}
 output: pdf_document
-geometry: margin=2.54cm
+geometry: margin = 2.54cm
 ---
 
 ## OVERVIEW
@@ -44,7 +44,7 @@ It is critical to note, however, that other mechanisms can give rise to patterns
 ```{r, results = 'hide'}
 rm(list = ls())
 getwd()
-setwd("~/GitHub/QB-2019/1.HandOuts/12.PhyloCom")
+setwd("~/GitHub/QB-2023/1.HandOuts/11.PhyloCom")
 ```
 
 ### B. Load Packages 
@@ -57,13 +57,19 @@ In the chunk of code below, the `require()` function in `R` returns `TRUE` if th
 This `for` loop loads each package and installs the package when `require()` returns `FALSE`.
 
 ```{r, results = 'hide', message = FALSE, warning = FALSE} 
-package.list <- c('picante', 'ape', 'seqinr', 'vegan', 'fossil', 'reshape', 'simba')
+package.list <- c('picante', 'ape', 'seqinr', 'vegan', 'fossil', 
+                  'reshape', 'devtools', 'BiocManager', 'ineq', 
+                  'labdsv', 'matrixStats', 'pROC')
 for (package in package.list) {
   if (!require(package, character.only = TRUE, quietly = TRUE)) {
     install.packages(package, repos='http://cran.us.r-project.org')
     library(package, character.only = TRUE)
   }
 }
+
+devtools::install_github(repo = 'zellerlab/SIMBA')
+BiocManager::install("rhdf5")
+
 ```
 
 ### C. Load Source Code
@@ -219,7 +225,7 @@ outgroup <- read.alignment(file = "./data/methanosarcina.fasta", format = "fasta
 DNAbin <- rbind(as.DNAbin(outgroup), as.DNAbin(ponds.cons))
 
 # Visualize alignment
-image.DNAbin(DNAbin, show.labels=T, cex.lab = 0.05, las = 1) 
+image.DNAbin(DNAbin, show.labels = T, cex.lab = 0.05, las = 1) 
 ```
 
 With the DNAbin object that we just made, we'll now create a distance matrix with the Jukes Cantor "JC" Model using the `ape` package. 
@@ -246,8 +252,9 @@ phy <- root(phy, outgroup, resolve.root = TRUE)
 
 # Plot the rooted tree {ape}
 par(mar = c(1, 1, 2, 1) + 0.1)
-plot.phylo(phy, main = "Neighbor Joining Tree", "phylogram", show.tip.label = FALSE, 
-           use.edge.length = FALSE, direction = "right", cex = 0.6, label.offset = 1)
+plot.phylo(phy, main = "Neighbor Joining Tree", "phylogram", 
+      show.tip.label = FALSE, use.edge.length = FALSE, 
+      direction = "right", cex = 0.6, label.offset = 1)
 ```
 
 ## 4) PHYLOGENETIC ALPHA DIVERSITY
@@ -445,7 +452,7 @@ Here, we will explore two: Mean Pairwise Distance and UniFrac distance.
 \end{tabular}
 \end{center}
 
-Let's calculate the phylogenetic community resemblance matrices for our pond data set using Mean Pairwise Distance and UniFrac distance. 
+Let us calculate the phylogenetic community resemblance matrices for our pond data set using Mean Pairwise Distance and UniFrac distance. 
 
 ```{r, results = 'hide', message = FALSE, warning = FALSE}
 # Mean Pairwise Distance
@@ -455,7 +462,7 @@ dist.mp <- comdist(comm, phydist)
 dist.uf <- unifrac(comm, phy)
 ```
 
-Now, let's compare the Mean Pair Distance and UniFrac distance matrices. 
+Now, let us compare the Mean Pair Distance and UniFrac distance matrices. 
 
 ```{r}
 par(mar = c(5, 5, 2, 1) + 0.1)
@@ -522,10 +529,10 @@ Here, we will test for this watershed affect using the Permutational Multivariat
 watershed <- env$Location
 
 # Run PERMANOVA with `adonis()` Function {vegan}
-adonis(dist.uf ~ watershed, permutations = 999)
+phylo.adonis <- adonis2(dist.uf ~ watershed, permutations = 999)
 
 # We can compare to PERMANOVA results based on taxonomy
-adonis(
+tax.adonis <- adonis2(
   vegdist(                             # create a distance matrix on
     decostand(comm, method = "log"),   # log-transformed relative abundances
     method = "bray") ~ watershed,      # using Bray-Curtis dissimilarity metric
@@ -552,14 +559,14 @@ envs <- envs[, -which(names(envs) %in% c("TDS", "Salinity", "Cal_Volume"))]
 env.dist <- vegdist(scale(envs), method = "euclid")
 ```
 
-First, let's conduct a Mantel test to examine the potential correlation between UniFrac distance and environmental variation:
+First, let us conduct a Mantel test to examine the potential correlation between UniFrac distance and environmental variation:
 
 ```{r, results = 'hide'}
 # Conduct Mantel Test (`vegan`)
 mantel(dist.uf, env.dist) 
 ```
 
-Second, let's conduct a distance-based Redundancy Analysis (dbRDA). 
+Second, let us conduct a distance-based Redundancy Analysis (dbRDA). 
 You will recall that this constrained ordination technique allows one to test for the effects of an explanatory matrix (e.g., environmental data) on a response matrix (e.g., phylogenetic distance matrix). 
 
 ```{r, results = 'hide'}
@@ -573,9 +580,9 @@ ponds.fit
 
 # Calculate explained variation
 dbrda.explainvar1 <- round(ponds.dbrda$CCA$eig[1] / 
-                         sum(c(ponds.dbrda$CCA$eig, ponds.dbrda$CA$eig)), 3) * 100
+                    sum(c(ponds.dbrda$CCA$eig, ponds.dbrda$CA$eig)), 3) * 100
 dbrda.explainvar2 <- round(ponds.dbrda$CCA$eig[2] / 
-                         sum(c(ponds.dbrda$CCA$eig, ponds.dbrda$CA$eig)), 3) * 100
+                    sum(c(ponds.dbrda$CCA$eig, ponds.dbrda$CA$eig)), 3) * 100
 # Make dbRDA plot
 
 # Define plot parameters
@@ -583,9 +590,9 @@ par(mar = c(5, 5, 4, 4) + 0.1)
 
 # Initiate plot
 plot(scores(ponds.dbrda, display = "wa"), xlim = c(-2, 2), ylim = c(-2, 2),
-     xlab = paste("dbRDA 1 (", dbrda.explainvar1, "%)", sep = ""),
-     ylab = paste("dbRDA 2 (", dbrda.explainvar2, "%)", sep = ""),
-     pch = 16, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
+  xlab = paste("dbRDA 1 (", dbrda.explainvar1, "%)", sep = ""),
+  ylab = paste("dbRDA 2 (", dbrda.explainvar2, "%)", sep = ""),
+  pch = 16, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
 
 # Add axes
 axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
@@ -658,7 +665,7 @@ df <- data.frame(coord.dist.ls, bray.curtis.dist.ls[, 3], unifrac.dist.ls[, 3],
 names(df)[4:6] <- c("bray.curtis", "unifrac", "env.dist")
 ```
 
-Now, let's plot the DD relationships:
+Now, let us plot the DD relationships:
 
 ```{r, results = 'hide'}
 # Set initial plot parameters
