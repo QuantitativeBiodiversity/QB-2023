@@ -26,7 +26,7 @@ This will save the PDF output in your '3.RStudio' folder.
 7. After Knitting, please submit the worksheet by making a **push** to your GitHub repo and then create a **pull request** via GitHub.
 Your pull request should include this file (**3.RStudio_Worksheet.Rmd**) with all code blocks filled out and questions answered) and the PDF output of `Knitr` (**3.RStudio_Worksheet.pdf**).
 
-The completed exercise is due on **Wednesday, March 24^th^, 2021 before 12:00 PM (noon)**.
+The completed exercise is due on **Wednesday, January 18^th^, 2023 before 12:00 PM (noon)**.
 
 ## 1) HOW WE WILL BE USING R AND OTHER TOOLS
 
@@ -302,5 +302,5 @@ Describe what you learned below in the "Answer" section and include appropriate 
 Use Knitr to create a PDF of your completed **3.RStudio_Worksheet.Rmd** document, push the repo to GitHub, and create a pull request.
 Please make sure your updated repo include both the PDF and RMarkdown files.
 
-This assignment is due on **Wednesday, March 24^th^, 2021 at 12:00 PM (noon)**.
+This assignment is due on **Wednesday, January 18^th^, 2023 at 12:00 PM (noon)**.
 
