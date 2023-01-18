@@ -156,7 +156,7 @@ Here are the instructions for setting this up.
 8. Assign a token name and description for 90 days, 
 9. After generating token, make sure you copy and save; you will need this for next step.
 
-In the process above, token generation and verification is linked to Duo. 
+In the process above, token generation and verification is linked to Duo, which can be enabled in "Settings" under "Passwords and authentication". 
 Duo will generate a GitHub associated six-digit code that you will be asked to supply to github.com    
 
 ## 6) Commit and Push
@@ -186,7 +186,6 @@ We check for these changes using the git commands **fetch** and **merge** as fol
 You should now see the repo, including your recent changes, on your GitHub webpage.
 
 ## 7) Pull Request
-The first time you 
 After pushing your commit, you need to follow up by making a **Pull Request**.
 
 1. Navigate to your GitHub webpage to make sure that the file (e.g., README.md) was uploaded correctly. 

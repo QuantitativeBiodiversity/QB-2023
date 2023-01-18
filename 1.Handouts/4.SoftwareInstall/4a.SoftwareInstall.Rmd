@@ -114,19 +114,23 @@ For instructions to add MiKTeX binaries to **PATH environment variable** see htt
 Type the following in terminal
     
 ```sh
-cd /usr/local/texlive/2022/bin/universal-darwin
 tlmgr init-usertree
 tlmgr --usermode install framed
 tlmgr --usermode install titling
 ```
 
-If for some reason this does not work, try
+The `tlmgr` command should work from any directory if the installation was successful.
+
+If for some reason this does not work (likely due to a permission setting in your operating system or the command PATH wasn't properly loaded during installation), try changing to the MacTex directory (found in the MacTex readme file) to enable `framed` and `titling`. Most likely adding "./", which will indicate to Unix that the command is present in the directory, will allow the `tlmgr` command to function.
 
 ```sh
-./tlmgr
+cd /usr/local/texlive/2022/bin/universal-darwin
+./tlmgr init-usertree
+./tlmgr --usermode install framed
+./tlmgr --usermode install titling
 ```
 
-or 
+Adding "sudo", which allows the user to run a command with elevated privileges, may be required to run the `tlmgr` command, depending on your computers administrative permission settings.
 
 ```sh
 sudo ./tlmgr
