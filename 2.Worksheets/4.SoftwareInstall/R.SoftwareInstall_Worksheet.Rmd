@@ -14,7 +14,7 @@ When you are done, **Knit** the text and code into a PDF file.
 Basically, just press the **Knit** button above.
 After Knitting, please submit via GitHub. 
 Review **2. Reproducible Science with Git and GitHub** Handout if needed.
-It is due on **March 24^th^, 2021 at 12:00 (noon)**.  
+It is due on **January 18^th^, 2023 at 12:00 (noon)**.  
 
 ## Assignment:
 

@@ -111,12 +111,25 @@ To fix this, you need to install the required files.
 For instructions to add MiKTeX binaries to **PATH environment variable** see https://stackoverflow.com/questions/47911135/r-sweave-no-tex-installation-detected.
 
 **On a Mac**:
-Type the following in terminal:
+Type the following in terminal
     
 ```sh
+cd /usr/local/texlive/2022/bin/universal-darwin
 tlmgr init-usertree
 tlmgr --usermode install framed
 tlmgr --usermode install titling
+```
+
+If for some reason this does not work, try
+
+```sh
+./tlmgr
+```
+
+or 
+
+```sh
+sudo ./tlmgr
 ```
 
 **On a PC**:
@@ -133,5 +146,3 @@ You have two options:
 mpm --install framed
 mpm --install titling
 ```
-
-
