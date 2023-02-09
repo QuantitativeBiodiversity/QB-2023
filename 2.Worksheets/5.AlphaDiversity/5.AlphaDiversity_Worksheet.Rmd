@@ -3,7 +3,7 @@ title: '5\. Worksheet: Alpha Diversity'
 author: "Student Name; Z620: Quantitative Biodiversity, Indiana University"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
-geometry: margin=2.54cm
+geometry: margin = 2.54cm
 ---
 
 ## OVERVIEW
@@ -201,7 +201,7 @@ In the R code chunk below, please do the following:
 ```
 
 
-##4) SPECIES EVENNESS
+## 4) SPECIES EVNENNESS
 Here, we consider how abundance varies among species, that is, **species evenness**.
 
 ### Visualizing evenness: the rank abundance curve (RAC)
@@ -228,7 +228,7 @@ In the R code chunk below, do the following:
 
 ```
 
-Now, let's examine the RAC for `site1` of the BCI data set.
+Now, let us examine the RAC for `site1` of the BCI data set.
 
 In the R code chunk below, do the following:
 
@@ -296,7 +296,7 @@ Do they agree? If so, why? If not, why? What can you infer from the results.
 > ***Answer 6***:
 
 
-##5) INTEGRATING RICHNESS AND EVENNESS: DIVERSITY METRICS
+## 5) INTEGRATING RICHNESS AND EVENNESS: DIVERSITY METRICS
 
 So far, we have introduced two primary aspects of diversity, i.e., richness and evenness.
 Here, we will use popular indices to estimate diversity, which explicitly incorporate richness and evenness
@@ -376,7 +376,7 @@ In the R code chunk below, please do the following:
 
 > ***Answer 7***:
 
-##6) HILL NUMBERS 
+## 6) HILL NUMBERS 
 
 Remember that we have learned about the advantages of Hill Numbers to measure and compare diversity among samples. We also learned to explore the effects of rare species in a community by examining diversity for a series of exponents $q$. 
 
@@ -458,4 +458,4 @@ Any other interesting observations based on what you learned this week?
 Use Knitr to create a PDF of your completed 5.AlphaDiversity_Worksheet.Rmd document, push it to GitHub, and create a pull request.
 Please make sure your updated repo include both the pdf and RMarkdown files.
 
-Unless otherwise noted, this assignment is due on **Wednesday, April 7^th^, 2021 at 12:00 PM (noon)**.
+Unless otherwise noted, this assignment is due on **Wednesday, January 25^th^, 2023 at 12:00 PM (noon)**.
