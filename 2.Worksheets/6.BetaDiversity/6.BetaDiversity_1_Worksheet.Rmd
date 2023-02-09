@@ -1,5 +1,5 @@
 ---
-title: '8\. Worksheet: Among Site (Beta) Diversity -- Part 1'
+title: '6\. Worksheet: Among Site (Beta) Diversity -- Part 1'
 author: "Student Name; Z620: Quantitative Biodiversity, Indiana University"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
@@ -28,13 +28,13 @@ If you need a second paragraph be sure to start the first line with ">".
 You should notice that the answer is highlighted in green by RStudio (color may vary if you changed the editor theme). 
 5. Before you leave the classroom today, it is *imperative* that you **push** this file to your GitHub repo, at whatever stage you are. Ths will enable you to pull your work onto your own computer.
 6. When you have completed the worksheet, **Knit** the text and code into a single PDF file by pressing the `Knit` button in the RStudio scripting panel.
-This will save the PDF output in your '8.BetaDiversity' folder.
+This will save the PDF output in your '6.BetaDiversity' folder.
 7. After Knitting, please submit the worksheet by making a **push** to your GitHub repo and then create a **pull request** via GitHub.
 Your pull request should include this file 
-(**8.BetaDiversity_1_Worksheet.Rmd**) with all code blocks filled out and questions answered) and the PDF output of `Knitr`  
-(**8.BetaDiversity_1_Worksheet.pdf**).
+(**6.BetaDiversity_1_Worksheet.Rmd**) with all code blocks filled out and questions answered) and the PDF output of `Knitr`  
+(**6.BetaDiversity_1_Worksheet.pdf**).
 
-The completed exercise is due on **Friday, April 16^th^, 2021 before 09:00 AM**.
+The completed exercise is due on **Wednesday, February 1^st^, 2023 before 12:00 PM (noon)**.
 
 ## 1) R SETUP
 
@@ -45,7 +45,7 @@ In the R code chunk below, provide the code to:
 
 1. clear your R environment,
 2. print your current working directory,
-3. set your working directory to your "*/8.BetaDiversity*" folder, and
+3. set your working directory to your "*/6.BetaDiversity*" folder, and
 4. load the `vegan` R package (be sure to install if needed).  
 
 ```{r}
@@ -249,13 +249,6 @@ b.  Generate a hypothesis about which fish species are potential indicators of r
 
 ## SYNTHESIS
 
-Using the `mobsim` package from the DataWrangling module last week, simulate two local communities each containing 1000 individuals (*N*) and 25 species (*S*), but with one having a random spatial distribution and the other having a patchy spatial distribution. 
-Take ten (10) subsamples from each site using the quadrat function and answer the following questions:
-
-
-1) Compare the average pairwise similarity among subsamples in site 1 (random spatial distribution) to the average pairswise similarity among subsamples in site 2 (patchy spatial distribution). 
-Use a t-test to determine whether compositional similarity was affected by the spatial distribution. 
-Finally, compare the compositional similarity of site 1 and site 2 to the source community?
-
-2) Create a cluster diagram or ordination using your simulated data. 
-Are there any visual trends that would suggest a difference in composition between site 1 and site 2? Describe.
+Load the dataset from that you and your partner are using for the team project. 
+Use one of the tools introduced in the beta diversity module to visualize your data. 
+Describe any interesting patterns and identify a hypothesis is relevant to the principles of biodiversity. 
