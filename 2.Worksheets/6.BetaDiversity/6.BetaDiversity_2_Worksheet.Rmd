@@ -1,5 +1,5 @@
 ---
-title: '8\. Worksheet: Among Site (Beta) Diversity -- Part 2'
+title: '6\. Worksheet: Among Site (Beta) Diversity -- Part 2'
 author: "Student Name; Z620: Quantitative Biodiversity, Indiana University"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
@@ -27,7 +27,7 @@ Your pull request should include this file (**8.BetaDiversity_2_Worksheet.Rmd**)
 with all code blocks filled out and questions answered) and the PDF output of `Knitr`  
 (**8.BetaDiversity_2_Worksheet.pdf**).
 
-The completed exercise is due on **Wednesday, April 23^rd^, 2021 before 09:00 AM**.
+The completed exercise is due on **Wednesday, February 8^th^, 2023 before 12:00 PM (noon)**.
 
 ## 1) R SETUP
 
@@ -38,7 +38,7 @@ In the R code chunk below, provide the code to:
 
 1. clear your R environment,
 2. print your current working directory,
-3. set your working directory to your "*/8.BetaDiversity*" folder, and
+3. set your working directory to your "*/6.BetaDiversity*" folder, and
 4. load the `vegan` R package (be sure to install if needed).  
 
 ```{r}
@@ -168,14 +168,7 @@ In the code chunk below,
 
 ## SYNTHESIS
 
-As in the previous worksheet, use the `mobsim` package from the DataWrangling module to simulate two local communities each containing 1000 individuals (*N*) and 25 species (*S*), but with one having a random spatial distribution and the other having a patchy spatial distribution. 
-Take ten (10) subsamples from each site using the quadrat function and answer the following questions:
-
-1) Perform a PERMANOVA to test whether or not the spatial distribution of species affects species composition.
-
-2) Load the dataset you are using for your Team Project. 
-Perform an ordination to visualize your dataset.
-Using this ordination, develop some hypotheses relevant to $\beta$-diversity.
-Use a statistic to test one of these hypotheses.
-Succinctly explain the finding and its relevance to your system.
+Load the dataset from that you and your partner are using for the team project. 
+Use one of the hypothesis-testing tools introduced in the beta diversity module. 
+Interpret the findings of your data with respect to principles of biodiversity. 
 

@@ -146,15 +146,23 @@ Before going any further, we need to set up our GitHub permissions.
 Recently, GitHub made the decision to move away from passwords.
 Now, automatic token authentication is used. 
 Here are the instructions for setting this up. 
-1. Go to your GitHub site (e.g., https://github.com/jaytlennon)
-2. Click on your avatar in the upper right hand corner,
-3. Click on "Settings",
-4. Click on "Developer settings" on the left-hand side towards the bottom,
-5. Click on "Personal access tokens" on the left-hand side,
-6. Choose the "Fine-grained tokens" option,
-7. You want to assign "read and write" permissions for all repositories, 
-8. Assign a token name and description for 90 days, 
-9. After generating token, make sure you copy and save; you will need this for next step.
+1. Go to your GitHub site (e.g., https://github.com/jaytlennon)  
+
+2. Click on your avatar in the upper right hand corner,  
+
+3. Click on "Settings",  
+
+4. Click on "Developer settings" on the left-hand side towards the bottom,  
+
+5. Click on "Personal access tokens" on the left-hand side,  
+
+6. Choose the "Fine-grained tokens" option,  
+
+7. You want to assign "read and write" permissions for all repositories,  
+
+8. Assign a token name and description for 90 days,  
+
+9. After generating token, make sure you copy and save; you will need this for next step.  
 
 In the process above, token generation and verification is linked to Duo, which can be enabled in "Settings" under "Passwords and authentication". 
 Duo will generate a GitHub associated six-digit code that you will be asked to supply to github.com    

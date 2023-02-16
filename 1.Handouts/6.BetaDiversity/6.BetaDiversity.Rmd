@@ -42,6 +42,11 @@ for (package in package.list) {
     library(package, character.only = TRUE)
   }
 }
+
+# Some problems in 2023 with `BiodiversityR`
+# Mostly (only) for species scores in PCoA.
+# Alternative is to load function from source file
+# source("../bin/spec.scores.function.R")
 ```
 
 ## 2) LOADING DATA
