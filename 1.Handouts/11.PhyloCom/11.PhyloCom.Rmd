@@ -66,10 +66,6 @@ for (package in package.list) {
     library(package, character.only = TRUE)
   }
 }
-
-devtools::install_github(repo = 'zellerlab/SIMBA')
-BiocManager::install("rhdf5")
-
 ```
 
 ### C. Load Source Code
@@ -222,7 +218,7 @@ We can then visualize the alignment using the `image.DNAbin()` function.
 outgroup <- read.alignment(file = "./data/methanosarcina.fasta", format = "fasta")
 
 # Convert alignment file to DNAbin
-DNAbin <- rbind(as.DNAbin(outgroup), as.DNAbin(ponds.cons))
+DNAbin <- rbind(as.DNAbin(outgroup),as.DNAbin(ponds.cons))
 
 # Visualize alignment
 image.DNAbin(DNAbin, show.labels = T, cex.lab = 0.05, las = 1) 
@@ -653,16 +649,16 @@ bray.curtis.dist <- 1 - vegdist(comm)
 # Phylogenetic similarity among ponds (UniFrac)
 unifrac.dist <- 1 - dist.uf 
   
-# Transform all distances into list format:
-unifrac.dist.ls <- liste(unifrac.dist, entry = "unifrac")
-bray.curtis.dist.ls <- liste(bray.curtis.dist, entry = "bray.curtis")
-coord.dist.ls <- liste(coord.dist, entry = "geo.dist")
-env.dist.ls <- liste(env.dist, entry = "env.dist")
+# Transform all distances into pairwise long format with the melt function from {reshape}:
+unifrac.dist.mlt <- melt(as.matrix(unifrac.dist))[melt(upper.tri(as.matrix(unifrac.dist)))$value,]
+bray.curtis.dist.mlt <- melt(as.matrix(bray.curtis.dist))[melt(upper.tri(as.matrix(bray.curtis.dist)))$value,]
+coord.dist.mlt <- melt(as.matrix(coord.dist))[melt(upper.tri(as.matrix(coord.dist)))$value,]
+env.dist.mlt <- melt(as.matrix(env.dist))[melt(upper.tri(as.matrix(env.dist)))$value,]
 
 # Create a data frame from the lists of distances
-df <- data.frame(coord.dist.ls, bray.curtis.dist.ls[, 3], unifrac.dist.ls[, 3],
-                 env.dist.ls[, 3])
-names(df)[4:6] <- c("bray.curtis", "unifrac", "env.dist")
+df <- data.frame(coord.dist.mlt, bray.curtis.dist.mlt[, 3], unifrac.dist.mlt[, 3],
+                 env.dist.mlt[, 3])
+names(df)[3:6] <- c("geo.dist","bray.curtis", "unifrac", "env.dist")
 ```
 
 Now, let us plot the DD relationships:
@@ -701,6 +697,7 @@ mtext("Geographic Distance (km)", side = 1, adj = 0.55,
 Finally, let's test whether the slopes for taxonomic and phylogenetic DD are significantly different from one another using the permutation-based `diffslope()` function in the `simba` package:
 
 ```{r, results = 'hide'}
+source("./bin/diffslope.R")
 diffslope(df$geo.dist, df$unifrac, df$geo.dist, df$bray.curtis)
 ```
 
