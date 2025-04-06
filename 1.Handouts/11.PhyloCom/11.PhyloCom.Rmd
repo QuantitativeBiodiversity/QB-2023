@@ -207,7 +207,14 @@ So, again, we'll use `gsub()` to clean things up.
 
 ```{r}
 # Rename OTUs in the FASTA File
-ponds.cons$nam <- gsub("\\|.*$", "", gsub("^.*?\t", "", ponds.cons$nam))
+
+# 2023, there was an issue with original gsub code,
+# perhaps due to UTF8 ASCII character issue
+# ponds.cons$nam <- gsub("\\|.*$", "", gsub("^.*?\t", "", ponds.cons$nam))
+# new gsub() code seems to help:
+
+ponds.cons$nam <- gsub(".*\t", "", ponds.cons$nam)
+ponds.cons$nam <- gsub("\\|.*", "", ponds.cons$nam)
 ```
 
 Next, we will import an archaeal sequence, specify this as our outgroup, and then convert the alignment file to a DNAbin object using the `ape` package.
@@ -694,7 +701,7 @@ mtext("Geographic Distance (km)", side = 1, adj = 0.55,
       line = 0.5, outer = TRUE)
 ```
 
-Finally, let's test whether the slopes for taxonomic and phylogenetic DD are significantly different from one another using the permutation-based `diffslope()` function in the `simba` package:
+Finally, let's test whether the slopes for taxonomic and phylogenetic DD are significantly different from one another using the permutation-based `diffslope()` function, which is source code in the bin folder:
 
 ```{r, results = 'hide'}
 source("./bin/diffslope.R")
