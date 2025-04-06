@@ -1,5 +1,5 @@
 ---
-title: '8\. Worksheet: Phylogenetic Diversity - Traits'
+title: '11\. Worksheet: Phylogenetic Diversity - Traits'
 author: "Student Name; Z620: Quantitative Biodiversity, Indiana University"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
@@ -30,9 +30,7 @@ You should notice that the answer is highlighted in green by RStudio (color may 
 6. When you have completed the worksheet, **Knit** the text and code into a single PDF file by pressing the `Knit` button in the RStudio scripting panel.
 This will save the PDF output in your '8.PhyloTraits' folder.
 7. After Knitting, please submit the worksheet by making a **push** to your GitHub repo and then create a **pull request** via GitHub.
-Your pull request should include this file (**8.PhyloTraits_Worksheet.Rmd**).  
-Code blocks should be filled out and questions should be answered.
-Include a PDF output of `Knitr` (**8.PhyloTraits_Worksheet.pdf**).
+Your pull request should include this file (**8.PhyloTraits_Worksheet.Rmd**) with all code blocks filled out and questions answered) and the PDF output of `Knitr` (**8.PhyloTraits_Worksheet.pdf**).
 
 The completed exercise is due on **Wednesday, February 22^nd^, 2023 before 12:00 PM (noon)**.
 
@@ -74,13 +72,11 @@ In the R code chunk below, do the following:
 4. plot the alignment using a grid to visualize rows of sequences.
 
 ```{r}
-package.list <- c('ape', 'seqinr', 'phylobase', 'adephylo', 'geiger', 'picante', 
-    'stats', 'RColorBrewer', 'caper', 'phylolm', 'pmc', 'ggplot2', 'tidyr', 
-    'dplyr', 'phangorn', 'pander') 
+package.list <- c('ape', 'seqinr', 'phylobase', 'adephylo', 'geiger', 'picante', 'stats', 'RColorBrewer', 'caper', 'phylolm', 'pmc', 'ggplot2', 'tidyr', 'dplyr', 'phangorn', 'pander') 
 for (package in package.list) {
-  if (!require(package, character.only = TRUE, quietly = TRUE)) {
+  if (!require(package, character.only=TRUE, quietly=TRUE)) {
     install.packages(package)
-    (library(package, character.only = TRUE)
+    library(package, character.only=TRUE)
   }
 }
 
@@ -320,12 +316,33 @@ c.  Discuss what factors might give rise to differences between the metrics.
 > ***Answer 9b***:  
 > ***Answer 9c***:  
 
+### D. Correspondence between trait clusters and phylogeny
+
+In the R code chunk below, do the following:  
+1. calculate Jaccard Index on resource use incidence matrix 
+2. create a hierarchical cluster of resource use
+3. map the resource use cluster onto the phylogeny for each environment, and  
+4. use `RF.dist` and `mantel` to measure the degree of correspondence between each dendrogram.
+
+```{r}
+
+
+```
+
+***Question 10***: Using a hierarchical clustering algorithm, map similarity in resource use map onto the phylogeny and answer the following questions:
+
+a. Compare the patterns between resource use and phylogeny between each lake. How do the two sets of tangelgrams differ between the taxa isolated from each lake?
+b. Interpret the Robinson-Fould index and Mantel correlation test results. How does each analysis differ and shape our interpretation of correlating niche overlap with phylogeny.
+
+> ***Answer 9a***:  
+> ***Answer 9b***: 
+
 ## 7) PHYLOGENETIC REGRESSION
 
 In the R code chunk below, do the following:  
-1. Load and clean the mammal phylogeny and trait dataset,
-2. Fit a linear model to the trait dataset, examining the relationship between mass and BMR,
-2. Fit a phylogenetic regression to the trait dataset, taking into account the mammal supertree
+1. Clean the resource use dataset to perform a linear regression to test for differences in maximum growth rate by niche breadth and lake environment.
+2. Fit a linear model to the trait dataset, examining the relationship between maximum growth rate by niche breadth and lake environment,
+2. Fit a phylogenetic regression to the trait dataset, taking into account the bacterial phylogeny
 
 ```{r}
 
@@ -346,7 +363,7 @@ d. Try to come up with a scenario where the relationship between two variables w
 
 ## 7) SYNTHESIS
 
-Work with members of your Team Project to obtain reference sequences for taxa in your study.
+Work with members of your Team Project to obtain reference sequences for 10 or more taxa in your study.
 Sequences for plants, animals, and microbes can found in a number of public repositories, but perhaps the most commonly visited site is the National Center for Biotechnology Information (NCBI) <https://www.ncbi.nlm.nih.gov/>.
 In almost all cases, researchers must deposit their sequences in places like NCBI before a paper is published. 
 Those sequences are checked by NCBI employees for aspects of quality and given an **accession number**.

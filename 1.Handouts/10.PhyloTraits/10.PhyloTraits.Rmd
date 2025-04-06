@@ -614,7 +614,7 @@ rownames(p.phylosignal) <- c("K", "PIC.var.obs", "PIC.var.mean",
 for (i in 1:18){
   x <- setNames(as.vector(p.growth.std[,i]),row.names(p.growth))
   out <- phylosignal(x, nj.rooted)
-  p.phylosignal[1:5, i] <- round(t(out), 3)
+  p.phylosignal[1:5, i] <- round(t(out), 6)
 }
 
 # Use the BH Correction on P-values: 
